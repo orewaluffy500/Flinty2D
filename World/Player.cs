@@ -1,6 +1,8 @@
+using System.Numerics;
 using Flinty.GameMath;
 using Flinty.GameSystem;
 using Flinty.Globals;
+using Raylib_cs;
 
 namespace Flinty.World
 {
@@ -12,17 +14,21 @@ namespace Flinty.World
 
         public Cursor Cursor { get; }
 
+        public Raylib_cs.Camera2D Camera;
+
         public float StepDelay { get; private set; } = 0;
 
         public Player(Terrain terrain)
         {
             Terrain = terrain;
             Cursor = new(this, Terrain);
+            Camera = new(new(0, 0), Pos.ToVector(), 0, 1);
         }
 
         public override void Update(float deltaTime)
         {
             UpdateMovement(deltaTime);
+            UpdateCamera();
             Cursor.Update(deltaTime);
         }
 
@@ -75,6 +81,14 @@ namespace Flinty.World
         {
             Cursor.Draw(renderer);
             renderer.Rectangle(new(Pos.Mul(Preferences.TILE_SIZE), Size.TileSize()), new(123, 123, 255));
+        }
+
+
+
+        public void UpdateCamera()
+        {
+            Camera.Offset = new(Raylib.GetScreenWidth() / 2, Raylib.GetScreenHeight() / 2);
+            Camera.Target = Vector2.Lerp(Camera.Target, Pos.Mul(Preferences.TILE_SIZE).ToVector(), 0.1f);
         }
     }
 }

@@ -20,10 +20,12 @@ namespace Flinty.World
 
         public void Draw()
         {
+            Raylib.BeginMode2D(Player.Camera);
             ChunkManager.RenderAndUpdateChunks();
 
             Player.Draw(Engine.Renderer);
             Engine.Renderer.Text(0, 0, Raylib.GetFPS().ToString(), Color.RayWhite);
+            Raylib.EndMode2D();
         }
 
         public void Update(float deltaTime)

@@ -1,3 +1,4 @@
+using System.Numerics;
 using Flinty.GameMath;
 using Flinty.GameSystem;
 using Flinty.Globals;
@@ -12,6 +13,12 @@ namespace Flinty.World
 
         public override void Draw(EngineRenderer renderer)
         {
+            renderer.Line(
+                Pos.Mul(Preferences.TILE_SIZE).Change(Preferences.TILE_SIZE / 2),
+                Player.Pos.Mul(Preferences.TILE_SIZE).Change(Preferences.TILE_SIZE / 2),
+                new(230, 230, 240, 80)
+            );
+
             renderer.Rectangle(
                 new(Pos.Mul(Preferences.TILE_SIZE), Size.TileSize()),
                 new(100, 255, 100, 140)
@@ -35,11 +42,22 @@ namespace Flinty.World
 
         private void UpdateAndClampPosition()
         {
-            Pos.X = (int)Math.Floor((float)(Raylib.GetMouseX() / Preferences.TILE_SIZE));
-            Pos.Y = (int)Math.Floor((float)(Raylib.GetMouseY() / Preferences.TILE_SIZE));
+            Vector2 worldPos = Raylib.GetScreenToWorld2D(
+                Raylib.GetMousePosition(),
+                Player.Camera
+            );
 
-            Pos.X = Math.Clamp(Pos.X, Player.Pos.X - 5, Player.Pos.X + 5);
-            Pos.Y = Math.Clamp(Pos.Y, Player.Pos.Y - 5, Player.Pos.Y + 5);
+            int mouseX = (int)MathF.Floor(worldPos.X / Preferences.TILE_SIZE);
+            int mouseY = (int)MathF.Floor(worldPos.Y / Preferences.TILE_SIZE);
+
+            int minX = (int)MathF.Floor(Player.Pos.X - 5);
+            int maxX = (int)MathF.Floor(Player.Pos.X + 5);
+
+            int minY = (int)MathF.Floor(Player.Pos.Y - 5);
+            int maxY = (int)MathF.Floor(Player.Pos.Y + 5);
+
+            Pos.X = Math.Clamp(mouseX, minX, maxX);
+            Pos.Y = Math.Clamp(mouseY, minY, maxY);
         }
     }
 }

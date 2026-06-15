@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Flinty")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e9d44c1a461126a20f2e2e10b3984e8cfa8e2e68")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+353ee665f64b23ae88070451a3215ca0dc734dab")]
 [assembly: System.Reflection.AssemblyProductAttribute("Flinty")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Flinty")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

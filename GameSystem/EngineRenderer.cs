@@ -33,5 +33,11 @@ namespace Flinty.GameSystem
         {
             Raylib.DrawText(text, x, y, fontSize, color);
         }
+
+
+        public void Line(Pos start, Pos end, Raylib_cs.Color color)
+        {
+            Raylib.DrawLineV(start.ToVector(), end.ToVector(), color);
+        }
     }
 }
