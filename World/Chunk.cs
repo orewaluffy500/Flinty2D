@@ -9,11 +9,9 @@ namespace Flinty.World
         public Block?[,] Blocks { set; get; } = new Block[Preferences.CHUNK_SIZE, Preferences.CHUNK_SIZE];
         public Pos Pos { get; } = pos;
 
-        public void SetBlock(Block? block)
+        public void SetBlock(int x, int y, Block? block)
         {
-            if (block == null) return;
-
-            Blocks[block.Pos.X, block.Pos.Y] = block;
+            Blocks[x, y] = block;
         }
 
 

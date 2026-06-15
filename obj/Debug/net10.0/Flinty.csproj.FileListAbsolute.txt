@@ -39,3 +39,4 @@ D:\Flinty\Flinty\obj\Debug\net10.0\refint\Flinty.dll
 D:\Flinty\Flinty\obj\Debug\net10.0\Flinty.pdb
 D:\Flinty\Flinty\obj\Debug\net10.0\Flinty.genruntimeconfig.cache
 D:\Flinty\Flinty\obj\Debug\net10.0\ref\Flinty.dll
+D:\Flinty\Flinty\obj\Debug\net10.0\Flinty.sourcelink.json

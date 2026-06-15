@@ -5,7 +5,7 @@ namespace Flinty.Globals
         public static readonly int TILE_SIZE = 16; // Size of every tile
         public static readonly int CHUNK_SIZE = 16; // Size of every chunk
 
-        public static readonly int DRAW_DISTANCE = 2; // Square area of drawing
+        public static readonly int DRAW_DISTANCE = 4; // Square area of drawing
 
         public static readonly bool DRAW_CHUNK_DECORS = true; // Chunk decorations such as borders.
         
