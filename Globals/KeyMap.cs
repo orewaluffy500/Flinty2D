@@ -41,6 +41,7 @@ namespace Flinty.Globals
             ["MoveDown"] = KeyboardKey.S,
             ["MoveLeft"] = KeyboardKey.A,
             ["MoveRight"] = KeyboardKey.D,
+            ["CycleBlocks"] = KeyboardKey.Tab,
         };
 
 
@@ -52,6 +53,11 @@ namespace Flinty.Globals
         public static bool KeyUp(string key)
         {
             return Raylib.IsKeyUp(Dict.GetValueOrDefault(key, KeyboardKey.Null));
+        }
+
+        public static bool KeyPressed(string key)
+        {
+            return Raylib.IsKeyPressed(Dict.GetValueOrDefault(key, KeyboardKey.Null));
         }
 
     }

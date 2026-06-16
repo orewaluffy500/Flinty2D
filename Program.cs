@@ -1,4 +1,5 @@
-﻿using Flinty.GameSystem;
+﻿using Flinty;
+using Flinty.GameSystem;
 
 Engine engine = new("Flinty v0", 1080, 576);
 

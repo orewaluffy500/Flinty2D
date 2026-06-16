@@ -2,13 +2,14 @@ using System.Numerics;
 using Flinty.GameMath;
 using Flinty.GameSystem;
 using Flinty.Globals;
+using Flinty.World;
 using Raylib_cs;
 
-namespace Flinty.World
+namespace Flinty.Player
 {
-    public class Cursor(Player player, Terrain terrain) : Entity
+    public class Cursor(PlayerEntity player, Terrain terrain) : Entity
     {
-        public Player Player { get; private set; } = player;
+        public PlayerEntity Player { get; private set; } = player;
         public Terrain Terrain { get; private set; } = terrain;
 
         public override void Draw(EngineRenderer renderer)
@@ -31,7 +32,7 @@ namespace Flinty.World
 
             if (MouseMap.ButtonDown("RMB"))
             {
-                Terrain.Place(Pos.X, Pos.Y, "soil");
+                Terrain.Place(Pos.X, Pos.Y, Player.Inventory.GetSelection());
             }
 
             else if (MouseMap.ButtonDown("LMB"))

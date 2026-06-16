@@ -33,16 +33,34 @@ namespace Flinty.World
                 finalColor = BlockEntry.FallbackColor;
             }
 
+            // Get texture
+            Texture2D? tex = null;
+
+            if (BlockEntry != null)
+            {
+                tex = TextureRegistry.GetTexture(BlockEntry.TextureId);
+            }
+
+
             // Draw
-            renderer.Rectangle(
-                new(Pos.Mul(Preferences.TILE_SIZE), TileSize),
-                finalColor
-            );
+            if (tex == null)
+            {
+                renderer.Rectangle(
+                    new(Pos.Mul(Preferences.TILE_SIZE), TileSize),
+                    finalColor
+                );
+            }
+            else
+            {
+                renderer.Texture(
+                    (Texture2D)tex, new(Pos.Zero(), Size.TileSize()), new(Pos.Mul(Preferences.TILE_SIZE), Size.TileSize()), 0
+                );
+            }
         }
 
         public override void Tick(int index, Terrain terrain)
         {
-            
+
         }
     }
 }

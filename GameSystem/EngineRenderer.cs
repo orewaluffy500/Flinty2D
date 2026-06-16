@@ -29,6 +29,13 @@ namespace Flinty.GameSystem
             Raylib.DrawRectangleLines(pos.X, pos.Y, size.X, size.Y, color);
         }
 
+        public void Texture(Texture2D texture, RectShape source, RectShape dest, int rotation)
+        {
+            Raylib.DrawTexturePro(
+                texture, source.toRaylib(), dest.toRaylib(), Pos.Zero().ToVector(), rotation, Raylib_cs.Color.White
+            );
+        }
+
         public void Text(int x, int y, String text, Raylib_cs.Color color, int fontSize = 24)
         {
             Raylib.DrawText(text, x, y, fontSize, color);

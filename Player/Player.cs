@@ -2,11 +2,12 @@ using System.Numerics;
 using Flinty.GameMath;
 using Flinty.GameSystem;
 using Flinty.Globals;
+using Flinty.World;
 using Raylib_cs;
 
-namespace Flinty.World
+namespace Flinty.Player
 {
-    public class Player : Entity
+    public class PlayerEntity : Entity
     {
         public Pos Velocity { get; private set; } = Pos.Zero();
 
@@ -16,13 +17,16 @@ namespace Flinty.World
 
         public Raylib_cs.Camera2D Camera;
 
+        public Inventory Inventory;
+
         public float StepDelay { get; private set; } = 0;
 
-        public Player(Terrain terrain)
+        public PlayerEntity(Terrain terrain)
         {
             Terrain = terrain;
             Cursor = new(this, Terrain);
             Camera = new(new(0, 0), Pos.ToVector(), 0, 1);
+            Inventory = new(this);
         }
 
         public override void Update(float deltaTime)
@@ -58,6 +62,11 @@ namespace Flinty.World
             if (KeyMap.KeyDown("MoveRight"))
             {
                 Velocity.X += 1;
+            }
+
+            if (KeyMap.KeyDown("CycleBlocks"))
+            {
+                Inventory.AdvanceSelection();
             }
 
             if (!Velocity.IsZero())

@@ -1,5 +1,6 @@
 using Flinty.GameMath;
 using Flinty.GameSystem;
+using Flinty.Player;
 using Raylib_cs;
 
 namespace Flinty.World
@@ -9,7 +10,7 @@ namespace Flinty.World
         public Engine Engine { get; set; }
         public ChunkManager ChunkManager { get; }
 
-        public Player Player { get; }
+        public PlayerEntity Player { get; }
 
         public Terrain(Engine eng)
         {
@@ -24,8 +25,10 @@ namespace Flinty.World
             ChunkManager.RenderAndUpdateChunks();
 
             Player.Draw(Engine.Renderer);
-            Engine.Renderer.Text(0, 0, Raylib.GetFPS().ToString(), Color.RayWhite);
             Raylib.EndMode2D();
+
+
+            Engine.Renderer.Text(0, 0, Raylib.GetFPS().ToString(), Color.RayWhite);
         }
 
         public void Update(float deltaTime)

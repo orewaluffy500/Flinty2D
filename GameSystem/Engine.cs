@@ -20,8 +20,8 @@ namespace Flinty.GameSystem
 
         public float TickTimer { get; private set; } = 0;
 
-        public int TickIndex { get; private set; }= 0;
-        public bool Ticking { get; private set; }= false;
+        public int TickIndex { get; private set; } = 0;
+        public bool Ticking { get; private set; } = false;
 
         public Engine(string _caption, int _w, int _h)
         {
@@ -30,6 +30,7 @@ namespace Flinty.GameSystem
             Height = _h;
             Caption = _caption;
             BackgroundColor = new(20, 20, 40);
+
 
             // Initialize window
             Raylib.SetTraceLogLevel(TraceLogLevel.Error);
@@ -45,13 +46,9 @@ namespace Flinty.GameSystem
             Terrain = new(this);
 
             // Block registring
-            BlockRegistry.RegisterNew("soil", Color.Brown);
+            BlockRegistry.RegisterNew("soil", "Textures/dirt.png", Color.Brown);
+            BlockRegistry.RegisterNew("rock", "Textures/rock.png", new(80, 80, 80));
 
-            Terrain.Place(1, 10, "soil");
-            Terrain.Place(2, 10, "soil");
-            Terrain.Place(3, 10, "soil");
-            Terrain.Place(4, 10, "soil");
-            Terrain.Place(5, 10, "soil");
         }
 
         public void PreGameLoop()
@@ -63,6 +60,8 @@ namespace Flinty.GameSystem
         public void PostGameLoop()
         {
             Terrain.Final();
+            TextureRegistry.UnloadAll();
+
             Raylib.CloseWindow();
         }
 
