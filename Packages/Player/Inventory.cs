@@ -19,9 +19,21 @@ namespace Flinty.Player
 
         public string GetSelection()
         {
-            string key = BlockRegistry.VisibleRegistry.Keys.ElementAt(SelectedIndex);
+            string key = BlockRegistry.VisibleRegistry.ElementAt(SelectedIndex);
 
             return key;
+        }
+
+        public void SetSelection(string o)
+        {
+            var registry = BlockRegistry.VisibleRegistry;
+
+            int index = registry.IndexOf(o);
+
+            if (index > -1)
+            {
+                SelectedIndex = index;
+            }
         }
     }
 }

@@ -6,7 +6,7 @@ namespace Flinty.Assets
     {
         // Registry of blocks
         public static Dictionary<string, BlockEntry> Registry { get; } = new();
-        public static Dictionary<string, BlockEntry> VisibleRegistry { get; } = new(); // Registry of visible blocks
+        public static List<string> VisibleRegistry { get; } = new(); // Registry of visible blocks
 
         // Only add new block
         public static void RegisterNew(string typeName, string path, Color fallbackColor)
@@ -27,11 +27,12 @@ namespace Flinty.Assets
 
         public static void RefreshVisibleRegistry()
         {
+            VisibleRegistry.Clear();
             foreach (var pair in Registry)
             {
                 if (!pair.Key.StartsWith("_"))
                 {
-                    VisibleRegistry[pair.Key] = pair.Value;
+                    VisibleRegistry.Add(pair.Key);
                 }
             }
         }

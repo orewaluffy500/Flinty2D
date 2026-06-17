@@ -1,0 +1,1 @@
+f_player.selected('rock')

@@ -2,6 +2,7 @@
 using Flinty.Assets;
 using Flinty.GameMath;
 using Flinty.Globals;
+using Flinty.ModSystem;
 using Flinty.World;
 using Raylib_cs;
 
@@ -19,6 +20,8 @@ namespace Flinty.GameSystem
         public Terrain Terrain { get; }
 
         public Clock Clock { get; }
+
+        public ModEngine ModEngine { get; }
 
         public Engine(string _caption, int _w, int _h)
         {
@@ -43,10 +46,15 @@ namespace Flinty.GameSystem
             Terrain = new(this);
             Clock = new();
 
+            ModEngine = new(this);
+            ModEngine.InitializeModules();
+
             // Block registring
             BlockRegistry.RegisterNew("soil", "Textures/dirt.png", Color.Brown);
             BlockRegistry.RegisterNew("rock", "Textures/rock.png", new(80, 80, 80));
 
+            // Load Scripts
+            ModEngine.LoadScript("data/Scripts/test.lua");
         }
 
         public void PreGameLoop()
