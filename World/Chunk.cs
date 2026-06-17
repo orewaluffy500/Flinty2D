@@ -60,8 +60,8 @@ namespace Flinty.World
         {
             UpdateVisibleChunks(Terrain.Player.Pos.X, Terrain.Player.Pos.Y);
 
-            bool ticking = Terrain.Engine.Ticking;
-            int index = Terrain.Engine.TickIndex;
+            bool ticking = Terrain.Engine.Clock.IsTicking;
+            int index = Terrain.Engine.Clock.TickIndex;
 
             foreach (Chunk chunk in VisibleChunks)
             {

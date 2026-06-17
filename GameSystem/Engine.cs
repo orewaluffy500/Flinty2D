@@ -18,10 +18,7 @@ namespace Flinty.GameSystem
         public EngineRenderer Renderer { get; }
         public Terrain Terrain { get; }
 
-        public float TickTimer { get; private set; } = 0;
-
-        public int TickIndex { get; private set; } = 0;
-        public bool Ticking { get; private set; } = false;
+        public Clock Clock { get; }
 
         public Engine(string _caption, int _w, int _h)
         {
@@ -44,6 +41,7 @@ namespace Flinty.GameSystem
             // Initialize systems
             Renderer = new(this);
             Terrain = new(this);
+            Clock = new();
 
             // Block registring
             BlockRegistry.RegisterNew("soil", "Textures/dirt.png", Color.Brown);
@@ -67,25 +65,9 @@ namespace Flinty.GameSystem
 
         public void Update(float deltaTime)
         {
-            TickTimer += deltaTime;
-            Ticking = false;
-
-            if (TickTimer > (1f / Preferences.TICK_RATE))
-            {
-                TickTimer = 0;
-                TickIndex++;
-                Ticking = true;
-                if (TickIndex > Preferences.TICK_RATE) TickIndex = 0;
-
-                Tick();
-            }
+            Clock.Update(deltaTime);
 
             Terrain.Update(deltaTime);
-        }
-
-        private void Tick()
-        {
-            
         }
 
         public void Draw()
