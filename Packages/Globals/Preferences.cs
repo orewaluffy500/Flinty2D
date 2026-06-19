@@ -11,6 +11,6 @@ namespace Flinty.Globals
         
         public static readonly float STEP_DELAY = 0.1f;
 
-        public static readonly int TICK_RATE = 15;
+        public static readonly int TICK_RATE = 16;
     }
 }

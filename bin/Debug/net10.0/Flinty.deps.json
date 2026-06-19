@@ -8,6 +8,7 @@
     ".NETCoreApp,Version=v10.0": {
       "Flinty/1.0.0": {
         "dependencies": {
+          "KeraLua": "1.4.9",
           "NLua": "1.7.9",
           "Raylib-cs": "8.0.0"
         },

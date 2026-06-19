@@ -14,9 +14,11 @@ public class Clock
         {
             TickTimer -= dt;
             IsTicking = false;
+            return;
         }
 
         TickIndex = (TickIndex + 1) % Preferences.TICK_RATE;
+        TickTimer = 1f / Preferences.TICK_RATE;
         IsTicking = true;
     }
 }

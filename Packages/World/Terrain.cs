@@ -38,7 +38,7 @@ namespace Flinty.World
 
         public void Once()
         {
-            
+            Player.Update(1); // Head-tick
         }
 
         public void Final()

@@ -277,6 +277,7 @@
   },
   "projectFileDependencyGroups": {
     "net10.0": [
+      "KeraLua >= 1.4.9",
       "NLua >= 1.7.9",
       "Raylib-cs >= 8.0.0"
     ]
@@ -326,6 +327,10 @@
         "framework": "net10.0",
         "targetAlias": "net10.0",
         "dependencies": {
+          "KeraLua": {
+            "target": "Package",
+            "version": "[1.4.9, )"
+          },
           "NLua": {
             "target": "Package",
             "version": "[1.7.9, )"

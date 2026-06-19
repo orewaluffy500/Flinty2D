@@ -15,7 +15,7 @@ namespace Flinty.Player
 
         public Cursor Cursor { get; }
 
-        public Raylib_cs.Camera2D Camera;
+        public Camera2D Camera;
 
         public Inventory Inventory;
 

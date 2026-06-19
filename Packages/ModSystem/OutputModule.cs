@@ -10,30 +10,39 @@ public class OutputModule(APIBuilder builder, ModEngine engine) : IModule
 
     public void Build()
     {
-        Engine.Lua.NewTable("f_out");
+        Engine.Lua.NewTable("Out");
 
         var type = GetType();
-        Engine.Lua.RegisterFunction("f_out.info", this, type.GetMethod(nameof(Info)));
-        Engine.Lua.RegisterFunction("f_out.error", this, type.GetMethod(nameof(Error)));
-        Engine.Lua.RegisterFunction("f_out.warning", this, type.GetMethod(nameof(Warning)));
+        Engine.Lua.RegisterFunction("Out.info", this, type.GetMethod(nameof(Info)));
+        Engine.Lua.RegisterFunction("Out.error", this, type.GetMethod(nameof(Error)));
+        Engine.Lua.RegisterFunction("Out.warning", this, type.GetMethod(nameof(Warning)));
     }
 
-    public void Info(string text)
+    public void Info(object text)
     {
-        Console.WriteLine("Mod Message: " + text);
+        if (text is string t)
+        {
+            Console.WriteLine("Mod Message: " + text);
+        }
     }
 
-    public void Error(string cause, string text)
+    public void Error(object cause, object text)
     {
-        Console.ForegroundColor = ConsoleColor.Red;
-        Console.WriteLine($"Mod Error [{cause}]: {text}");
-        Console.ResetColor();
+        if (text is string t)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"Mod Error [{cause}]: {text}");
+            Console.ResetColor();
+        }
     }
-    
-    public void Warning(string cause, string text)
+
+    public void Warning(object cause, object text)
     {
-        Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine($"Mod Warning [{cause}]: {text}");
-        Console.ResetColor();
+        if (text is string t)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"Mod Warning [{cause}]: {text}");
+            Console.ResetColor();
+        }
     }
 }

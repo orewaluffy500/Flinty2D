@@ -112,6 +112,21 @@ namespace Flinty.GameMath
             return X + Y;
         }
 
+        public void Set(int a, int b)
+        {
+            X = a;
+            Y = b;
+        }
+
+        public void Set(Pos other)
+        {
+            Set(other.X, other.Y);
+        }
+
+        public void Set(Vector2 other)
+        {
+            Set((int) other.X, (int) other.Y);
+        }
 
         public Size ToSize()
         {

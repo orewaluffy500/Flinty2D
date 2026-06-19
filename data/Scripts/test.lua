@@ -1,1 +1,3 @@
-f_player.selected('rock')
+function _Tick()
+    Out.info("Tick")
+end

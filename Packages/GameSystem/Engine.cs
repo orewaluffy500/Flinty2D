@@ -47,6 +47,7 @@ namespace Flinty.GameSystem
             Clock = new();
 
             ModEngine = new(this);
+            ModEngine.InitializeSystem();
             ModEngine.InitializeModules();
 
             // Block registring
@@ -54,17 +55,30 @@ namespace Flinty.GameSystem
             BlockRegistry.RegisterNew("rock", "Textures/rock.png", new(80, 80, 80));
 
             // Load Scripts
-            ModEngine.LoadScript("data/Scripts/test.lua");
+            
+            string modFolder = "data/Scripts";
+
+            if (!Directory.Exists(modFolder)) Directory.CreateDirectory(modFolder);
+
+            foreach (string file in Directory.GetFiles(modFolder))
+            {
+                ModEngine.LoadScript(file);
+            }
+
         }
 
         public void PreGameLoop()
         {
             Raylib.SetExitKey(KeyboardKey.Null);
             Terrain.Once();
+
+
+            ModEngine.Callback_Start();
         }
 
         public void PostGameLoop()
         {
+            ModEngine.Callback_Final();
             Terrain.Final();
             TextureRegistry.UnloadAll();
 
@@ -76,6 +90,11 @@ namespace Flinty.GameSystem
             Clock.Update(deltaTime);
 
             Terrain.Update(deltaTime);
+
+            if (Clock.IsTicking)
+            {
+                ModEngine.Callback_Tick();
+            }
         }
 
         public void Draw()
