@@ -2,20 +2,16 @@ using NLua;
 
 namespace Flinty.ModSystem;
 
-public class OutputModule(APIBuilder builder, ModEngine engine) : IModule
+public class OutputModule(string moduleName, APIBuilder builder, ModEngine engine) : IModule(moduleName, builder, engine)
 {
-    public APIBuilder Builder => builder;
 
-    public ModEngine Engine => engine;
-
-    public void Build()
+    public override void Build()
     {
-        Engine.Lua.NewTable("Out");
+        base.Build();
 
-        var type = GetType();
-        Engine.Lua.RegisterFunction("Out.info", this, type.GetMethod(nameof(Info)));
-        Engine.Lua.RegisterFunction("Out.error", this, type.GetMethod(nameof(Error)));
-        Engine.Lua.RegisterFunction("Out.warning", this, type.GetMethod(nameof(Warning)));
+        RegisterFunc("info", nameof(Info));
+        RegisterFunc("error", nameof(Error));
+        RegisterFunc("warning", nameof(Warning));
     }
 
     public void Info(object text)

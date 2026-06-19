@@ -17,7 +17,11 @@ public class ModEngine(Engine engine)
 
     public NLua.Lua Lua { get; } = new();
  
-    public List<RegularMod> Mods { get; } = [];
+    public List<ScriptMod> Mods { get; } = [];
+
+
+
+    public static readonly string GAME_API_PREFIX = "API";
 
     private int ModIndex { get; set; } = 0;
     public void InitializeSystem()
@@ -73,7 +77,7 @@ public class ModEngine(Engine engine)
 
     public void Callback_Start()
     {
-        foreach (RegularMod mod in Mods)
+        foreach (ScriptMod mod in Mods)
         {
             mod.Callback_Start();
         }
@@ -81,7 +85,7 @@ public class ModEngine(Engine engine)
 
     public void Callback_Tick()
     {
-        foreach (RegularMod mod in Mods)
+        foreach (ScriptMod mod in Mods)
         {
             mod.Callback_Tick();
         }
@@ -89,7 +93,7 @@ public class ModEngine(Engine engine)
 
     public void Callback_Final()
     {
-        foreach (RegularMod mod in Mods)
+        foreach (ScriptMod mod in Mods)
         {
             mod.Callback_Final();
         }

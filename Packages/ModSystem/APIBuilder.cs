@@ -11,7 +11,9 @@ public class APIBuilder(ModEngine engine)
 
     public void BuildOutputModule()
     {
-        new OutputModule(this, ModEngine).Build();
-        new PlayerModule(this, ModEngine).Build();
+        ModEngine.Lua.NewTable(ModEngine.GAME_API_PREFIX);
+        new OutputModule("out", this, ModEngine).Build();
+        new PlayerModule("player", this, ModEngine).Build();
+        new TerrainModule("terrain", this, ModEngine).Build();
     }
 }

@@ -4,28 +4,24 @@ using NLua;
 namespace Flinty.ModSystem;
 
 
-public class PlayerModule(APIBuilder builder, ModEngine engine) : IModule
+public class PlayerModule(string moduleName, APIBuilder builder, ModEngine engine) : IModule(moduleName, builder, engine)
 {
-    public APIBuilder Builder => builder;
 
-    public ModEngine Engine => engine;
-
-    public void Build()
+    public override void Build()
     {
-        Engine.Lua.NewTable("Player");
+        base.Build();
 
-        var type = GetType();
-        Engine.Lua.RegisterFunction("Player.Selected", this, type.GetMethod(nameof(SelectedBlock)));
-        Engine.Lua.RegisterFunction("Player.X", this, type.GetMethod(nameof(PosX)));
-        Engine.Lua.RegisterFunction("Player.Y", this, type.GetMethod(nameof(PosY)));
-        Engine.Lua.RegisterFunction("Player.Teleport", this, type.GetMethod(nameof(Teleport)));
-        Engine.Lua.RegisterFunction("Player.Move", this, type.GetMethod(nameof(Move)));
+        RegisterFunc("selected", nameof(SelectedBlock));
+        RegisterFunc("x", nameof(PosX));
+        RegisterFunc("y", nameof(PosY));
+        RegisterFunc("teleport", nameof(Teleport));
+        RegisterFunc("move", nameof(Move));
 
         // Vararg functions
 
-        Engine.Lua.DoString(@"
-        function Player.Pos()
-            return Player.X(), Player.Y()
+        Engine.Lua.DoString(@$"
+        function {ModuleName}.pos()
+            return {ModuleName}.x(), {ModuleName}.y()
         end");
     }
 

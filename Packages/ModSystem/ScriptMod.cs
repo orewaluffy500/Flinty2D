@@ -1,15 +1,17 @@
 using Flinty.GameSystem;
+using Flinty.Globals;
 using NLua;
+using NLua.Exceptions;
 
 namespace Flinty.ModSystem;
 
 
-public class RegularMod
+public class ScriptMod
 {
     public ModEngine Engine { get; }
     public string EnvName { get; }
 
-    public RegularMod(ModEngine engine, string envName)
+    public ScriptMod(ModEngine engine, string envName)
     {
         Engine = engine;
         EnvName = envName;
@@ -47,9 +49,15 @@ public class RegularMod
 
     public void RunCallback(string name, params object[] args)
     {
+        try {
         if (GetCallback(name) is LuaFunction f)
         {
             f.Call(args);
+        }
+        }
+        catch (LuaException e)
+        {
+            Logging.LuaError(name, $"{e.Message} {e.InnerException?.Message}");
         }
     }
 }

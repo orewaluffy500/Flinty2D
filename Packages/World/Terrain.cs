@@ -1,3 +1,4 @@
+using Flinty.Assets;
 using Flinty.GameMath;
 using Flinty.GameSystem;
 using Flinty.Player;
@@ -49,6 +50,8 @@ namespace Flinty.World
         
         public void Place(int x, int y, string typeName, Boolean replace = false)
         {
+            if (!BlockRegistry.IsRegistered(typeName)) return;
+
             GetBlockEx(x, y, out Pos localBlockPos, out Chunk chunk, out Block? block);
 
             // Exit if the block already exists and we can't replace it.
@@ -101,9 +104,14 @@ namespace Flinty.World
             return block;
         }
 
+        public string GetBlockName(int x, int y)
+        {
+            return GetBlock(x, y)?.Type ?? "air";
+        }
+
         public bool IsBlock(int x, int y)
         {
-            return GetBlock(x, y) != null;
+            return GetBlockName(x, y) != "air";
         }
     }
 }

@@ -36,6 +36,12 @@ namespace Flinty.Assets
                 }
             }
         }
+
+
+        public static bool IsRegistered(string name)
+        {
+            return Registry.ContainsKey(name);
+        }
     }
 
 
