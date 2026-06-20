@@ -11,6 +11,7 @@ namespace Flinty.Player
     {
         public PlayerEntity Player { get; private set; } = player;
         public Terrain Terrain { get; private set; } = terrain;
+        public Pos OldCursorPos { get; } = Pos.Zero();
 
         public override void Draw(EngineRenderer renderer)
         {
@@ -43,6 +44,12 @@ namespace Flinty.Player
 
         private void UpdateAndClampPosition()
         {
+            var mouseDelta = Raylib.GetMouseDelta();
+            if (mouseDelta.X + mouseDelta.Y < 5)
+            {
+                return;
+            }
+
             Vector2 worldPos = Raylib.GetScreenToWorld2D(
                 Raylib.GetMousePosition(),
                 Player.Camera
@@ -50,7 +57,11 @@ namespace Flinty.Player
 
             int mouseX = (int)MathF.Floor(worldPos.X / Preferences.TILE_SIZE);
             int mouseY = (int)MathF.Floor(worldPos.Y / Preferences.TILE_SIZE);
+            ClampCursor(mouseX, mouseY);
+        }
 
+        public void ClampCursor(int mouseX, int mouseY)
+        {
             int minX = (int)MathF.Floor(Player.Pos.X - 5);
             int maxX = (int)MathF.Floor(Player.Pos.X + 5);
 

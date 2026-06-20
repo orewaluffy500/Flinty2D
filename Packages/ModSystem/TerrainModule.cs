@@ -1,3 +1,4 @@
+using Flinty.Globals;
 using Flinty.World;
 
 namespace Flinty.ModSystem;
@@ -17,6 +18,7 @@ public class TerrainModule : IModule
         RegisterFunc("destroy", nameof(Break));
         RegisterFunc("get_block", nameof(GetBlock));
         RegisterFunc("is_empty", nameof(IsEmpty));
+        RegisterFunc("block_meta", nameof(BlockMeta));
     }
 
 
@@ -33,6 +35,25 @@ public class TerrainModule : IModule
     public string GetBlock(int x, int y)
     {
         return Terrain.GetBlockName(x, y);
+    }
+
+    public object? BlockMeta(int x, int y, string name, params object[] args)
+    {
+        Block? block = Terrain.GetBlock(x, y);
+        if (block == null)
+        {
+            Logging.Error("ModSystem.TerrainModule", $"Could not find valid block at {x} , {y}");
+            return null;
+        }
+
+
+        if (args.Length > 0)
+        {
+            block.Metadata.Set(name, args[0]);
+            return args[0];    
+        }
+
+        return block.Metadata.Get(name);
     }
 
     public bool IsEmpty(int x, int y) => !Terrain.IsBlock(x, y);

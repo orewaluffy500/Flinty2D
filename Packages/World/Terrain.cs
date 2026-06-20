@@ -59,6 +59,9 @@ namespace Flinty.World
 
             // Set block
             chunk.SetBlock(localBlockPos.X, localBlockPos.Y, new Block(x, y, typeName));
+
+            // Call script event
+            Engine.ModEngine.Callback_BlockPlaced(x, y, typeName);
         }
 
         public void Break(int x, int y)
@@ -66,6 +69,11 @@ namespace Flinty.World
             GetBlockEx(x, y, out Pos localBlockPos, out Chunk chunk, out Block? block);
 
             if (block == null) return;
+
+            // Handle script event
+            bool continue_ = Engine.ModEngine.Callback_BlockBreaking(x, y, block.Type);
+            
+            if (continue_ == false) return; // Must use explicit check to ensure both nil and true mean continue (for sake of simplicity    )
 
             chunk.ClearBlock(localBlockPos.X, localBlockPos.Y);                
         }

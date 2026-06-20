@@ -16,9 +16,9 @@ public class OutputModule(string moduleName, APIBuilder builder, ModEngine engin
 
     public void Info(object text)
     {
-        if (text is string t)
+        if (text.ToString() != null)
         {
-            Console.WriteLine("Mod Message: " + text);
+            Console.WriteLine("Mod Message: " + text.ToString());
         }
     }
 

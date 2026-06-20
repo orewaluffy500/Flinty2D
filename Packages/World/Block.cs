@@ -13,6 +13,9 @@ namespace Flinty.World
         public string Type { get; }
         public BlockEntry? BlockEntry;
 
+        private Metadata? _metadata;
+        public Metadata Metadata => _metadata ??= new Metadata(); // lazy loaded metadata for optimization
+
         public static readonly Size TileSize = Size.TileSize();
 
         public Block(int x, int y, string type)

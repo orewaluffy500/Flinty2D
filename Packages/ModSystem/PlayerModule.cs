@@ -14,14 +14,27 @@ public class PlayerModule(string moduleName, APIBuilder builder, ModEngine engin
         RegisterFunc("selected", nameof(SelectedBlock));
         RegisterFunc("x", nameof(PosX));
         RegisterFunc("y", nameof(PosY));
+        RegisterFunc("cursor_x", nameof(CursorX));
+        RegisterFunc("cursor_y", nameof(CursorY));
         RegisterFunc("teleport", nameof(Teleport));
         RegisterFunc("move", nameof(Move));
+        RegisterFunc("meta", nameof(Meta));
 
         // Vararg functions
 
         Engine.Lua.DoString(@$"
         function {ModuleName}.pos()
             return {ModuleName}.x(), {ModuleName}.y()
+        end");
+
+        Engine.Lua.DoString(@$"
+        function {ModuleName}.cursor_pos(x, y)
+            if x ~= nil and y ~= nil then
+                {ModuleName}.cursor_x(x)
+                {ModuleName}.cursor_y(y)
+            end
+
+            return {ModuleName}.cursor_x(), {ModuleName}.cursor_y()
         end");
     }
 
@@ -51,4 +64,39 @@ public class PlayerModule(string moduleName, APIBuilder builder, ModEngine engin
         Engine.Player.Velocity.Y += y;
     }
     
+    public object? Meta(string name, params object[] args)
+    {
+        if (args.Length > 0)
+        {
+            Engine.Player.Metadata.Set(name, args[0]);
+            return args[0];
+        }
+
+        return Engine.Player.Metadata.Get(name);
+    }
+
+    public int CursorX(params object[] args)
+    {
+        var cursor = Engine.Player.Cursor;
+        if (args.Length > 0){
+            object v = args[0];
+            if (v is long i){
+                cursor.ClampCursor((int)i, cursor.Pos.Y);
+            }
+        }
+
+        return cursor.Pos.X;
+    }
+
+    public int CursorY(params object[] args)
+    {
+        var cursor = Engine.Player.Cursor;
+        if (args.Length > 0){
+            object v = args[0];
+            if (v is long i){
+                cursor.ClampCursor(cursor.Pos.X, (int)i);
+            }
+        }
+        return cursor.Pos.Y;
+    }
 }

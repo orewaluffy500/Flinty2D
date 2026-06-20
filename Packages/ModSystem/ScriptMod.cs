@@ -20,23 +20,42 @@ public class ScriptMod
 
     public void Callback_Start()
     {
-        RunCallback("Start");
+        RunCallback($"start");
     }
 
     public void Callback_Tick()
     {
-        RunCallback("_Tick");
+        RunCallback("_tick");
     }
 
-    public void Callback_Final()
+    public void Callback_End()
     {
-        RunCallback("Final");
+        RunCallback("exit");
     }
 
+    public void Callback_BlockPlaced(int x, int y, string name)
+    {
+        RunCallback("block_placed", x, y, name);
+    }
+
+    public bool Callback_BlockBreaking(int x, int y, string name)
+    {
+        object? result = RunCallback("block_breaking", x, y, name);
+
+        if (result is object[] values &&
+            values.Length > 0 &&
+            values[0] is bool b)
+        {
+            return b;
+        }
+
+        // no boolean returned -> allow breaking
+        return true;
+    }
 
     public LuaFunction? GetCallback(string name)
     {
-        var o = Engine.Lua[EnvName + "." + name];
+        var o = Engine.Lua[EnvName + "." + $"{ModEngine.GAME_API_PREFIX}.{name}"];
 
         if (o is LuaFunction f)
         {
@@ -47,17 +66,20 @@ public class ScriptMod
     }
 
 
-    public void RunCallback(string name, params object[] args)
+    public object? RunCallback(string name, params object[] args)
     {
-        try {
-        if (GetCallback(name) is LuaFunction f)
+        try
         {
-            f.Call(args);
-        }
+            if (GetCallback(name) is LuaFunction f)
+            {
+                return f.Call(args);
+            }
         }
         catch (LuaException e)
         {
             Logging.LuaError(name, $"{e.Message} {e.InnerException?.Message}");
         }
+
+        return null;
     }
 }

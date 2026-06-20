@@ -15,6 +15,8 @@ namespace Flinty.Player
 
         public Cursor Cursor { get; }
 
+        public Metadata Metadata { get; }
+
         public Camera2D Camera;
 
         public Inventory Inventory;
@@ -27,6 +29,7 @@ namespace Flinty.Player
             Cursor = new(this, Terrain);
             Camera = new(new(0, 0), Pos.ToVector(), 0, 1);
             Inventory = new(this);
+            Metadata = new();
         }
 
         public override void Update(float deltaTime)

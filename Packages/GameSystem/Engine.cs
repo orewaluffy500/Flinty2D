@@ -78,7 +78,7 @@ namespace Flinty.GameSystem
 
         public void PostGameLoop()
         {
-            ModEngine.Callback_Final();
+            ModEngine.Callback_End();
             Terrain.Final();
             TextureRegistry.UnloadAll();
 

@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Flinty.GameSystem;
 using Flinty.Globals;
 using Flinty.Player;
@@ -18,7 +19,6 @@ public class ModEngine(Engine engine)
     public NLua.Lua Lua { get; } = new();
  
     public List<ScriptMod> Mods { get; } = [];
-
 
 
     public static readonly string GAME_API_PREFIX = "API";
@@ -91,11 +91,34 @@ public class ModEngine(Engine engine)
         }
     }
 
-    public void Callback_Final()
+    public void Callback_End()
     {
         foreach (ScriptMod mod in Mods)
         {
-            mod.Callback_Final();
+            mod.Callback_End();
         }
+    }
+    
+    public void Callback_BlockPlaced(int x, int y, string name)
+    {
+        foreach (ScriptMod mod in Mods)
+        {
+            mod.Callback_BlockPlaced(x, y, name);
+        }
+    }
+
+    
+    public bool Callback_BlockBreaking(int x, int y, string name)
+    {
+        int yes = 0;
+        int no = 0;
+        foreach (ScriptMod mod in Mods)
+        {
+            bool v = mod.Callback_BlockBreaking(x, y, name);
+            if (v != false) yes++;
+            else no++;
+        }
+
+        return yes > no;
     }
 }
