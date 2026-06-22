@@ -23,6 +23,7 @@ namespace Flinty.GameSystem
 
         public ModEngine ModEngine { get; }
 
+
         public Engine(string _caption, int _w, int _h)
         {
             // Initialize window preferences
@@ -39,7 +40,7 @@ namespace Flinty.GameSystem
             Raylib.InitWindow(Width, Height, Caption);
 
             // Max FPS
-            // Raylib.SetTargetFPS(60);
+            Raylib.SetTargetFPS(60);
 
             // Initialize systems
             Renderer = new(this);
@@ -73,7 +74,6 @@ namespace Flinty.GameSystem
         {
             Raylib.SetExitKey(KeyboardKey.Null);
             Terrain.Once();
-
 
             ModEngine.Callback_Start();
         }

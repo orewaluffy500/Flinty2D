@@ -67,7 +67,7 @@ namespace Flinty.Player
                 Velocity.X += 1;
             }
 
-            if (KeyMap.KeyDown("CycleBlocks"))
+            if (KeyMap.KeyPressed("CycleBlocks"))
             {
                 Inventory.AdvanceSelection();
             }

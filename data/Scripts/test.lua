@@ -18,11 +18,32 @@ function Event.block_tick(x, y, name)
         return
     end
 
+    local bx = 1 - math.random(0, 1)
+    local by = 1 - math.random(0, 1)
+
+    local block_near = API.terrain.get_block(x + bx, y + by)
+    if block_near ~= "air" and block_near ~= "gobbler" and block_near ~= "rock" then
+        if math.random(1, 4) == 1 then
+            API.terrain.move(x, y, x+bx, y+by)
+            reset_tick_til_move(x+bx, y+by)
+            return
+        end
+    end
+
     local dx = math.random(-1, 1)
     local dy = math.random(-1, 1)
 
-    API.terrain.move(x, y, x + dx, y + dy)
-    reset_tick_til_move(x + dx, y + dy)
+    local ex = x + dx
+    local ey = y + dy
+
+    if dx ~= 0 or dy ~= 0 then
+        local name = API.terrain.get_block(ex, ey)
+        if name ~= "rock" and name ~= "gobbler" then
+            API.terrain.move(x, y, ex, ey, true)
+        end
+    end
+
+    reset_tick_til_move(ex, ey)
 end
 
 function set_tick_till_move(x, y, v)

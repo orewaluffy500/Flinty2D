@@ -58,7 +58,7 @@ namespace Flinty.World
             
             block1?.Pos.Set(dx, dy);
 
-            chunk2.SetBlockIfAbsent(localBlockPos2.X, localBlockPos2.Y, block1);
+            chunk2.SetBlock(localBlockPos2.X, localBlockPos2.Y, block1);
             chunk1.ClearBlock(localBlockPos1.X, localBlockPos1.Y);
         }
 

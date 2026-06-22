@@ -40,3 +40,9 @@ D:\Flinty\Flinty\obj\Debug\net10.0\Flinty.pdb
 D:\Flinty\Flinty\obj\Debug\net10.0\Flinty.genruntimeconfig.cache
 D:\Flinty\Flinty\obj\Debug\net10.0\ref\Flinty.dll
 D:\Flinty\Flinty\obj\Debug\net10.0\Flinty.sourcelink.json
+D:\Flinty\Flinty\bin\Debug\net10.0\ImGui.NET.dll
+D:\Flinty\Flinty\bin\Debug\net10.0\runtimes\linux-x64\native\libcimgui.so
+D:\Flinty\Flinty\bin\Debug\net10.0\runtimes\osx\native\libcimgui.dylib
+D:\Flinty\Flinty\bin\Debug\net10.0\runtimes\win-arm64\native\cimgui.dll
+D:\Flinty\Flinty\bin\Debug\net10.0\runtimes\win-x64\native\cimgui.dll
+D:\Flinty\Flinty\bin\Debug\net10.0\runtimes\win-x86\native\cimgui.dll
