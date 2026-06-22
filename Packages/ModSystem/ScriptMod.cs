@@ -11,6 +11,8 @@ public class ScriptMod
     public ModEngine Engine { get; }
     public string EnvName { get; }
 
+    public static readonly string GAME_EVENT_NAME = "Event";
+
     public ScriptMod(ModEngine engine, string envName)
     {
         Engine = engine;
@@ -18,25 +20,15 @@ public class ScriptMod
     }
 
 
-    public void Callback_Start()
-    {
-        RunCallback($"start");
-    }
+    public void Callback_Start() => RunCallback("start");
 
-    public void Callback_Tick()
-    {
-        RunCallback("_tick");
-    }
+    public void Callback_Tick() => RunCallback("tick");
 
-    public void Callback_End()
-    {
-        RunCallback("exit");
-    }
+    public void Callback_BlockTick(int x, int y, string name) => RunCallback("block_tick", x, y, name);
 
-    public void Callback_BlockPlaced(int x, int y, string name)
-    {
-        RunCallback("block_placed", x, y, name);
-    }
+    public void Callback_End() => RunCallback("exit");
+
+    public void Callback_BlockPlaced(int x, int y, string name) => RunCallback("block_placed", x, y, name);
 
     public bool Callback_BlockBreaking(int x, int y, string name)
     {
@@ -55,7 +47,7 @@ public class ScriptMod
 
     public LuaFunction? GetCallback(string name)
     {
-        var o = Engine.Lua[EnvName + "." + $"{ModEngine.GAME_API_PREFIX}.{name}"];
+        var o = Engine.Lua[EnvName + "." + $"{GAME_EVENT_NAME}.{name}"];
 
         if (o is LuaFunction f)
         {
@@ -82,4 +74,5 @@ public class ScriptMod
 
         return null;
     }
+    
 }

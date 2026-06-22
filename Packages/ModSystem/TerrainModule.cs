@@ -15,6 +15,7 @@ public class TerrainModule : IModule
         base.Build();
 
         RegisterFunc("place", nameof(Place));
+        RegisterFunc("move", nameof(MoveBlock));
         RegisterFunc("destroy", nameof(Break));
         RegisterFunc("get_block", nameof(GetBlock));
         RegisterFunc("is_empty", nameof(IsEmpty));
@@ -54,6 +55,11 @@ public class TerrainModule : IModule
         }
 
         return block.Metadata.Get(name);
+    }
+
+    public void MoveBlock(int x, int y, int dx, int dy)
+    {
+        Terrain.Move(x, y, dx, dy);
     }
 
     public bool IsEmpty(int x, int y) => !Terrain.IsBlock(x, y);

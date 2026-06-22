@@ -13,6 +13,8 @@ namespace Flinty.World
         public string Type { get; }
         public BlockEntry? BlockEntry;
 
+        public bool CanCollide { get; set; } = true;
+
         private Metadata? _metadata;
         public Metadata Metadata => _metadata ??= new Metadata(); // lazy loaded metadata for optimization
 
@@ -23,13 +25,18 @@ namespace Flinty.World
             Pos = new Pos(x, y);
             Type = type;
             BlockEntry = BlockRegistry.GetBlockEntry(Type);
+
+            if (BlockEntry is BlockEntry b)
+            {
+                CanCollide = b.CanCollide;
+            }
         }
 
 
         public override void Draw(EngineRenderer renderer)
         {
             // Validate color
-            Color finalColor = Color.Blue;
+            Color finalColor = Color.Black;
 
             if (BlockEntry != null)
             {
@@ -63,7 +70,6 @@ namespace Flinty.World
 
         public override void Tick(int index, Terrain terrain)
         {
-
         }
     }
 }

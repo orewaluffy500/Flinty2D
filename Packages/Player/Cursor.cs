@@ -12,6 +12,7 @@ namespace Flinty.Player
         public PlayerEntity Player { get; private set; } = player;
         public Terrain Terrain { get; private set; } = terrain;
         public Pos OldCursorPos { get; } = Pos.Zero();
+        public float timeTillBuild = 0.05f;
 
         public override void Draw(EngineRenderer renderer)
         {
@@ -31,25 +32,26 @@ namespace Flinty.Player
         {
             UpdateAndClampPosition();
 
+            if (timeTillBuild > 0f)
+            {
+                timeTillBuild -= deltaTime;
+            }
+
             if (MouseMap.ButtonDown("RMB"))
             {
                 Terrain.Place(Pos.X, Pos.Y, Player.Inventory.GetSelection());
+                timeTillBuild = 0.05f;
             }
 
             else if (MouseMap.ButtonDown("LMB"))
             {
                 Terrain.Break(Pos.X, Pos.Y);
+                timeTillBuild = 0.05f;
             }
         }
 
         private void UpdateAndClampPosition()
         {
-            var mouseDelta = Raylib.GetMouseDelta();
-            if (mouseDelta.X + mouseDelta.Y < 5)
-            {
-                return;
-            }
-
             Vector2 worldPos = Raylib.GetScreenToWorld2D(
                 Raylib.GetMousePosition(),
                 Player.Camera

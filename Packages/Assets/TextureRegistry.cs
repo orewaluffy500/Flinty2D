@@ -8,6 +8,10 @@ namespace Flinty.Assets
 
         public static void LoadNew(string id, string path)
         {
+            if (path.Contains("nul"))
+            {
+                throw new FileLoadException("Can NOT load `nul` files because they result in errors");
+            }
             if (textures.ContainsKey(id))
             {
                 if (Raylib.IsTextureValid(textures[id])) return;

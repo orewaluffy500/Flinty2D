@@ -26,7 +26,9 @@ public class ModEngine(Engine engine)
     private int ModIndex { get; set; } = 0;
     public void InitializeSystem()
     {
-        Console.WriteLine(Lua["_VERSION"]);
+        
+        Logging.Message("ModSystem", Lua["_VERSION"] is string s ? s : "N/A");
+
         Lua.DoString(@"
         function ___run_mod(filename, env)
             local file, err = loadfile(filename, 't', env)
@@ -68,7 +70,8 @@ public class ModEngine(Engine engine)
             Logging.Message("ModSystem.ModEngine", $"Succesfully loaded `{filename}`");
         } catch (LuaException e)
         {
-            Console.WriteLine(e.Message + " " + e.InnerException?.Message);
+            // Console.WriteLine(e.Message + " " + e.InnerException?.Message);
+            Console.WriteLine(e.StackTrace);
         }
     }
 
@@ -104,6 +107,14 @@ public class ModEngine(Engine engine)
         foreach (ScriptMod mod in Mods)
         {
             mod.Callback_BlockPlaced(x, y, name);
+        }
+    }
+
+    public void Callback_BlockTick(int x, int y, string name)
+    {
+        foreach (ScriptMod mod in Mods)
+        {
+            mod.Callback_BlockTick(x, y, name);
         }
     }
 

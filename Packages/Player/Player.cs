@@ -80,10 +80,8 @@ namespace Flinty.Player
 
             // Handle collision
 
-            if (Velocity.X > 0 && Terrain.IsBlock(Pos.X + 1, Pos.Y)) Velocity.X = 0;
-            if (Velocity.X < 0 && Terrain.IsBlock(Pos.X - 1, Pos.Y)) Velocity.X = 0;
-            if (Velocity.Y > 0 && Terrain.IsBlock(Pos.X, Pos.Y + 1)) Velocity.Y = 0;
-            if (Velocity.Y < 0 && Terrain.IsBlock(Pos.X, Pos.Y - 1)) Velocity.Y = 0;
+            if (Terrain.IsSolidBlock(Pos.X + Velocity.X, Pos.Y)) Velocity.X = 0;
+            if (Terrain.IsSolidBlock(Pos.X, Pos.Y + Velocity.Y)) Velocity.Y = 0;
 
             Pos.Change(Velocity.X, Velocity.Y, true); // Inline means no new instances
             Velocity.SetZero();
@@ -100,7 +98,7 @@ namespace Flinty.Player
         public void UpdateCamera()
         {
             Camera.Offset = new(Raylib.GetScreenWidth() / 2, Raylib.GetScreenHeight() / 2);
-            Camera.Target = Vector2.Lerp(Camera.Target, Pos.Mul(Preferences.TILE_SIZE).ToVector(), 0.1f);
+            Camera.Target = Vector2.Lerp(Camera.Target, Pos.Mul(Preferences.TILE_SIZE).ToVector(), 0.2f);
         }
     }
 }

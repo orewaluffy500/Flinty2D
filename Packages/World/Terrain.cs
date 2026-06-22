@@ -47,8 +47,23 @@ namespace Flinty.World
             
         }
 
+
+        public void Move(int x, int y, int dx, int dy, bool force = false)
+        {
+            GetBlockEx(x, y, out Pos localBlockPos1, out Chunk chunk1, out Block? block1);
+            GetBlockEx(dx, dy, out Pos localBlockPos2, out Chunk chunk2, out Block? block2);
+
+            if (block1 == null) return;
+            if (block2 != null && !force) return;
+            
+            block1?.Pos.Set(dx, dy);
+
+            chunk2.SetBlockIfAbsent(localBlockPos2.X, localBlockPos2.Y, block1);
+            chunk1.ClearBlock(localBlockPos1.X, localBlockPos1.Y);
+        }
+
         
-        public void Place(int x, int y, string typeName, Boolean replace = false)
+        public void Place(int x, int y, string typeName, bool replace = false)
         {
             if (!BlockRegistry.IsRegistered(typeName)) return;
 
@@ -120,6 +135,14 @@ namespace Flinty.World
         public bool IsBlock(int x, int y)
         {
             return GetBlockName(x, y) != "air";
+        }
+
+        public bool IsSolidBlock(int x, int y)
+        {
+            var block = GetBlock(x, y);
+            if (block is null) return false;
+            
+            return block.CanCollide;
         }
     }
 }

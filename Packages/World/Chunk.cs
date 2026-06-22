@@ -14,6 +14,14 @@ namespace Flinty.World
             Blocks[x, y] = block;
         }
 
+        public void SetBlockIfAbsent(int x, int y, Block? block)
+        {
+            if (Blocks[x, y] == null)
+            {
+                SetBlock(x, y, block);
+            }
+        }
+
 
         public void ClearBlock(int x, int y)
         {
@@ -25,83 +33,22 @@ namespace Flinty.World
             return Blocks[x, y];
         }
 
+        public void MoveBlock(int x, int y, int dx, int dy, bool force = false)
+        {
+            if (Blocks[x, y] == null) return;
+
+            if (Blocks[dx, dy] != null && !force) return;
+
+            Blocks[dx, dy] = Blocks[x, y];
+            Blocks[x, y] = null;
+        }
+
 
         // Packs two 32-bit chunk coordinates into a single 64-bit key for dictionary lookup.
         // X occupies the upper 32 bits; Y is cast to uint to prevent sign-extension in the lower 32 bits.
         public static long GetChunkKey(int x, int y)
         {
             return ((long)x << 32) | (uint)y;
-        }
-    }
-
-
-    public class ChunkManager(Terrain t)
-    {
-        public Terrain Terrain { get; } = t;
-        public Dictionary<long, Chunk> Chunks { get; } = [];
-
-        public List<Chunk> VisibleChunks { get; private set; } = [];
-
-        // Returns the chunk at (x, y), creating and registering it on first access ("safe" = never null)
-        public Chunk GetChunkSafe(int x, int y)
-        {
-            long key = Chunk.GetChunkKey(x, y);
-
-            if (!Chunks.TryGetValue(key, out Chunk? value))
-            {
-                value = new Chunk(new Pos(x, y));
-                Chunks[key] = value;
-            }
-
-            return value;
-        }
-
-        public void RenderAndUpdateChunks()
-        {
-            UpdateVisibleChunks(Terrain.Player.Pos.X, Terrain.Player.Pos.Y);
-
-            bool ticking = Terrain.Engine.Clock.IsTicking;
-            int index = Terrain.Engine.Clock.TickIndex;
-
-            foreach (Chunk chunk in VisibleChunks)
-            {
-                // Optionally overlay chunk border rectangles for debugging
-                if (Preferences.DRAW_CHUNK_DECORS)
-                {
-                    ChunkHelpers.DrawDecors(chunk, Terrain.Engine.Renderer);
-                }
-
-                foreach (Block? block in chunk.Blocks)
-                {
-                    if (block == null) continue;    // Sparse array — skip empty cells
-
-                    if (ticking)
-                    {
-                        block.Tick(index, Terrain);
-                    }
-
-                    block.Draw(Terrain.Engine.Renderer);
-                }
-            }
-        }
-
-        public void UpdateVisibleChunks(int originX, int originY)
-        {
-            VisibleChunks.Clear();
-
-            // Convert the world-space block origin to chunk-space coordinates
-            Pos originChunkPos = ChunkHelpers.Block2Chunk(originX, originY);
-
-            int drawDistance = Preferences.DRAW_DISTANCE;
-
-            // Collect all chunks within a square radius of [drawDistance] chunks around the origin
-            for (int y = originChunkPos.Y - drawDistance; y < originChunkPos.Y + drawDistance; y++)
-            {
-                for (int x = originChunkPos.X - drawDistance; x < originChunkPos.X + drawDistance; x++)
-                {
-                    VisibleChunks.Add(GetChunkSafe(x, y));
-                }
-            }
         }
     }
 

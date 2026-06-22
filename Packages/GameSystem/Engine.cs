@@ -39,7 +39,7 @@ namespace Flinty.GameSystem
             Raylib.InitWindow(Width, Height, Caption);
 
             // Max FPS
-            Raylib.SetTargetFPS(60);
+            // Raylib.SetTargetFPS(60);
 
             // Initialize systems
             Renderer = new(this);
@@ -53,6 +53,8 @@ namespace Flinty.GameSystem
             // Block registring
             BlockRegistry.RegisterNew("soil", "Textures/dirt.png", Color.Brown);
             BlockRegistry.RegisterNew("rock", "Textures/rock.png", new(80, 80, 80));
+
+            BlockRegistry.SetActive("soil", true);
 
             // Load Scripts
             
