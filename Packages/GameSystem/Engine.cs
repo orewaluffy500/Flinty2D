@@ -1,7 +1,5 @@
 
 using Flinty.Assets;
-using Flinty.GameMath;
-using Flinty.Globals;
 using Flinty.ModSystem;
 using Flinty.World;
 using Raylib_cs;
@@ -22,6 +20,7 @@ namespace Flinty.GameSystem
         public Clock Clock { get; }
 
         public ModEngine ModEngine { get; }
+
 
 
         public Engine(string _caption, int _w, int _h)
