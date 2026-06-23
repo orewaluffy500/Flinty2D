@@ -18,5 +18,6 @@ public class APIBuilder(ModEngine engine)
         new PlayerModule("player", this, ModEngine).Build();
         new TerrainModule("terrain", this, ModEngine).Build();
         new RegistryModule("registry", this, ModEngine).Build();
+        new EventModule("event", this, ModEngine).Build();
     }
 }

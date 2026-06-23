@@ -59,7 +59,7 @@ public class TerrainModule : IModule
 
     public void MoveBlock(int x, int y, int dx, int dy, params object[] args)
     {
-        Terrain.Move(x, y, dx, dy, args[0] is bool b && b);
+        Terrain.Move(x, y, dx, dy, args.Length > 0 && args[0] is bool b && b);
     }
 
     public bool IsEmpty(int x, int y) => !Terrain.IsBlock(x, y);

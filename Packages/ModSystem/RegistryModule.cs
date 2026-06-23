@@ -1,5 +1,4 @@
 using Flinty.Assets;
-using Flinty.ModSystem;
 using Raylib_cs;
 
 namespace Flinty.ModSystem;
@@ -23,10 +22,16 @@ public class RegistryModule : IModule
 
     public void RegisterBlock(string name, string texName, int r, int g, int b, params object[] args)
     {
+        if (name.Contains(' ') || texName.Contains(' '))
+        {
+            Globals.Logging.LuaError("Invalid block or texture name", "Cannot use spaces in block or texture names during registry");
+            return;   
+        }
+
         Color color = new(r, g, b);
 
         bool canCollide = true;
-        if (args[0] is bool cc)
+        if (args.Length > 0 && args[0] is bool cc)
         {
             canCollide = cc;
         }
@@ -36,7 +41,7 @@ public class RegistryModule : IModule
 
     public bool BlockActive(string name, params object[] args)
     {
-        if (args[0] is bool b)
+        if (args.Length > 0 && args[0] is bool b)
         {
             BlockRegistry.SetActive(name, b, true);
         }

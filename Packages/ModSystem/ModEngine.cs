@@ -17,6 +17,8 @@ public class ModEngine(Engine engine)
     public PlayerEntity Player { get; } = engine.Terrain.Player;
 
     public NLua.Lua Lua { get; } = new();
+
+    public Callbacks Callbacks { get; } = new();
  
     public List<ScriptMod> Mods { get; } = [];
 
@@ -70,7 +72,7 @@ public class ModEngine(Engine engine)
             Logging.Message("ModSystem.ModEngine", $"Succesfully loaded `{filename}`");
         } catch (LuaException e)
         {
-            // Console.WriteLine(e.Message + " " + e.InnerException?.Message);
+            Console.WriteLine(e.Message + " " + e.InnerException?.Message);
             Console.WriteLine(e.StackTrace);
         }
     }
@@ -80,56 +82,51 @@ public class ModEngine(Engine engine)
 
     public void Callback_Start()
     {
-        foreach (ScriptMod mod in Mods)
-        {
-            mod.Callback_Start();
-        }
+        Callbacks.Fire("game.start");
     }
 
     public void Callback_Tick()
     {
-        foreach (ScriptMod mod in Mods)
-        {
-            mod.Callback_Tick();
-        }
+        Callbacks.Fire("game.tick");
     }
 
     public void Callback_End()
     {
-        foreach (ScriptMod mod in Mods)
-        {
-            mod.Callback_End();
-        }
+        Callbacks.Fire("game.end");
     }
     
     public void Callback_BlockPlaced(int x, int y, string name)
     {
-        foreach (ScriptMod mod in Mods)
-        {
-            mod.Callback_BlockPlaced(x, y, name);
-        }
+        Callback_Block("placed", name, x, y, name);
     }
 
     public void Callback_BlockTick(int x, int y, string name)
     {
-        foreach (ScriptMod mod in Mods)
-        {
-            mod.Callback_BlockTick(x, y, name);
-        }
+        Callback_Block("tick", name, x, y, name);
     }
 
     
     public bool Callback_BlockBreaking(int x, int y, string name)
     {
-        int yes = 0;
-        int no = 0;
-        foreach (ScriptMod mod in Mods)
+        var answers = Callback_Block("breaking", name, x, y, name);
+
+        foreach (var v in answers)
         {
-            bool v = mod.Callback_BlockBreaking(x, y, name);
-            if (v != false) yes++;
-            else no++;
+            if (v is bool b && !b)
+            {
+                return false;
+            }
         }
 
-        return yes > no;
+        return true; // prioritize denied
+    }
+
+    private List<object> Callback_Block(string id, string name, params object[] args)
+    {
+        var result = Callbacks.Fire($"block.any.{id}", args);
+        var result2 = Callbacks.Fire($"block.{name}.{id}", args);
+
+        result.AddRange(result2);
+        return result;
     }
 }

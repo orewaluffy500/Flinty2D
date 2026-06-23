@@ -55,8 +55,6 @@ namespace Flinty.GameSystem
             BlockRegistry.RegisterNew("soil", "Textures/dirt.png", Color.Brown);
             BlockRegistry.RegisterNew("rock", "Textures/rock.png", new(80, 80, 80));
 
-            BlockRegistry.SetActive("soil", true);
-
             // Load Scripts
             
             string modFolder = "data/Scripts";

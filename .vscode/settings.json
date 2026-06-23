@@ -4,6 +4,9 @@
         "Out"
     ],
     "Lua.diagnostics.disable": [
-        "undefined-global"
+        "undefined-global",
+        "duplicate-set-field",
+        "unused-function",
+        "unused-local"
     ]
 }
