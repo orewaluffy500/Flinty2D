@@ -12,6 +12,7 @@ namespace Flinty.World
     {
         public string Type { get; }
         public BlockEntry? BlockEntry;
+        public Terrain Terrain { get; }
 
         public bool CanCollide { get; set; } = true;
 
@@ -20,8 +21,9 @@ namespace Flinty.World
 
         public static readonly Size TileSize = Size.TileSize();
 
-        public Block(int x, int y, string type)
+        public Block(int x, int y, string type, Terrain terrain)
         {
+            Terrain = terrain;
             Pos = new Pos(x, y);
             Type = type;
             BlockEntry = BlockRegistry.GetBlockEntry(Type);
@@ -35,6 +37,7 @@ namespace Flinty.World
 
         public override void Draw(EngineRenderer renderer)
         {
+
             // Validate color
             Color finalColor = Color.Black;
 
@@ -59,13 +62,15 @@ namespace Flinty.World
                     new(Pos.Mul(Preferences.TILE_SIZE), TileSize),
                     finalColor
                 );
+
+                return;
             }
-            else
-            {
-                renderer.Texture(
-                    (Texture2D)tex, new(Pos.Zero(), Size.TileSize()), new(Pos.Mul(Preferences.TILE_SIZE), Size.TileSize()), 0
-                );
-            }
+
+
+            renderer.Texture(
+                (Texture2D)tex, new(Pos.Zero(), Size.TileSize()), new(Pos.Mul(Preferences.TILE_SIZE), Size.TileSize()), 0
+            );
+            
         }
 
         public override void Tick(int index, Terrain terrain)

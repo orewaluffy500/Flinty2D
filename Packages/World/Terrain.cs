@@ -13,6 +13,8 @@ namespace Flinty.World
 
         public PlayerEntity Player { get; }
 
+        public bool TicksFrozen { get; set; } = false;
+
         public Terrain(Engine eng)
         {
             Engine = eng;
@@ -28,8 +30,14 @@ namespace Flinty.World
             Player.Draw(Engine.Renderer);
             Raylib.EndMode2D();
 
-
+            DrawHUD();
             Engine.Renderer.Text(0, 0, Raylib.GetFPS().ToString(), Color.RayWhite);
+        }
+
+        public void DrawHUD()
+        {
+            Engine.Renderer.TextOrigined(100, 0, new(1, 0), $"Blocks Frozen: {TicksFrozen}", TicksFrozen ? PreColors.CalmGreen : PreColors.CalmRed);
+            Player.DrawHUD(Engine.Renderer);
         }
 
         public void Update(float deltaTime)
@@ -73,7 +81,7 @@ namespace Flinty.World
             if (block != null && !replace) return;
 
             // Set block
-            chunk.SetBlock(localBlockPos.X, localBlockPos.Y, new Block(x, y, typeName));
+            chunk.SetBlock(localBlockPos.X, localBlockPos.Y, new Block(x, y, typeName, this));
 
             // Call script event
             Engine.ModEngine.Callback_BlockPlaced(x, y, typeName);

@@ -44,7 +44,7 @@ public class ChunkManager(Terrain t)
             {
                 if (block == null) continue;    // Sparse array — skip empty cells
 
-                if (ticking && BlockRegistry.IsActive(block.Type))
+                if (ticking && BlockRegistry.IsActive(block.Type) && !Terrain.TicksFrozen)
                 {
                     Terrain.Engine.ModEngine.Callback_BlockTick(block.Pos.X, block.Pos.Y, block.Type);
                 }

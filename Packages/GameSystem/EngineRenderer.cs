@@ -1,4 +1,3 @@
-using System.Drawing;
 using Flinty.GameMath;
 using Raylib_cs;
 
@@ -8,9 +7,12 @@ namespace Flinty.GameSystem
     {
         public Engine Parent { get; }
 
+        public Font SystemFont { get; }
+
         public EngineRenderer(Engine parent_)
         {
             Parent = parent_;
+            SystemFont = Raylib.LoadFont("data/Fonts/PixelifySans-Regular.ttf");
         }
 
         public void Rectangle(RectShape rect, Raylib_cs.Color color)
@@ -32,13 +34,38 @@ namespace Flinty.GameSystem
         public void Texture(Texture2D texture, RectShape source, RectShape dest, int rotation)
         {
             Raylib.DrawTexturePro(
-                texture, source.toRaylib(), dest.toRaylib(), Pos.Zero().ToVector(), rotation, Raylib_cs.Color.White
+                texture, source.toRaylib(), dest.toRaylib(), Pos.Zero().ToVector(), rotation, Color.White
             );
         }
 
-        public void Text(int x, int y, String text, Raylib_cs.Color color, int fontSize = 24)
+        public void TextScale(float x, float y, string text, Color color, int fontSize = 24)
         {
-            Raylib.DrawText(text, x, y, fontSize, color);
+            float scaleX = x / 100;
+            float scaleY = y / 100;
+
+            Raylib.DrawTextEx(SystemFont, text, new(scaleX * Raylib.GetScreenWidth(), scaleY * Raylib.GetScreenHeight()), fontSize, 2, color);
+        }
+
+        public void Text(int x, int y, string text, Color color, int fontSize = 24)
+        {
+            Raylib.DrawTextEx(SystemFont, text, new(x, y), fontSize, 2, color);
+        }
+
+        public void TextOrigined(float x, float y, Pos origin, string text, Color color, int fontSize = 24)
+        {
+            if (origin.IsZero())
+            {
+                TextScale(x, y, text, color, fontSize);
+                return; // perfomance lentlemen
+            }
+
+            var size = Raylib.MeasureTextEx(SystemFont, text, fontSize, 2);
+
+            float offsetX = origin.X * (size.X / Raylib.GetScreenWidth() * 100);
+            float offsetY = origin.Y * (size.Y / Raylib.GetScreenHeight() * 100);
+
+
+            TextScale(x - offsetX, y - offsetY, text, color, fontSize);
         }
 
 
@@ -46,5 +73,15 @@ namespace Flinty.GameSystem
         {
             Raylib.DrawLineV(start.ToVector(), end.ToVector(), color);
         }
+    }
+
+
+
+    public class PreColors
+    {
+        public static readonly Color CalmRed = new(255, 110, 110);
+        public static readonly Color CalmGreen = new(110, 255, 110);
+        public static readonly Color CalmBlue = new(110, 110, 255);
+
     }
 }

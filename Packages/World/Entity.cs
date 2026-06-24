@@ -20,6 +20,11 @@ namespace Flinty.World
             
         }
 
+        public virtual void DrawHUD(EngineRenderer renderer)
+        {
+            
+        }
+
         public virtual void Tick(int index, Terrain terrain)
         {
             

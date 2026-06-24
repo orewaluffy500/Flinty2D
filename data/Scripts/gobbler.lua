@@ -8,7 +8,6 @@ local function reset_tick_til_move(x, y)
 end
 
 local function block_placed(x, y, name)
-    API.out.info("AAAAAA")
     reset_tick_til_move(x, y)
 end
 

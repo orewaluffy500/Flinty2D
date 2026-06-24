@@ -1,4 +1,5 @@
 using System.Numerics;
+using Flinty.Assets;
 using Flinty.GameMath;
 using Flinty.GameSystem;
 using Flinty.Globals;
@@ -35,6 +36,8 @@ namespace Flinty.Player
         public override void Update(float deltaTime)
         {
             UpdateMovement(deltaTime);
+            HandleBlockCycle();
+            HandleMisc();
             UpdateCamera();
             Cursor.Update(deltaTime);
         }
@@ -67,11 +70,6 @@ namespace Flinty.Player
                 Velocity.X += 1;
             }
 
-            if (KeyMap.KeyPressed("CycleBlocks"))
-            {
-                Inventory.AdvanceSelection();
-            }
-
             if (!Velocity.IsZero())
             {
                 StepDelay = Preferences.STEP_DELAY;
@@ -85,6 +83,36 @@ namespace Flinty.Player
 
             Pos.Change(Velocity.X, Velocity.Y, true); // Inline means no new instances
             Velocity.SetZero();
+        }
+
+        public void HandleBlockCycle()
+        {
+            if (KeyMap.KeyPressed("CycleBlocks"))
+            {
+                Inventory.AdvanceSelection();
+            }
+        }
+
+        public void HandleMisc()
+        {
+            if (KeyMap.KeyPressed("G"))
+            {
+                Terrain.TicksFrozen = !Terrain.TicksFrozen;
+            }
+        }
+
+        public override void DrawHUD(EngineRenderer renderer)
+        {
+            var entry = BlockRegistry.GetBlockEntry(Inventory.GetSelection());
+
+            var color = entry?.FallbackColor ?? Color.RayWhite;
+
+            string selecName = Inventory.GetSelection();
+
+            renderer.TextScale(0, 5, selecName.ToUpper(), color);
+            renderer.TextScale(0, 8, "[TAB] to cycle.", Color.RayWhite, 20);
+            renderer.TextScale(0, 13, $"Player {Pos.X}, {Pos.Y}", Color.RayWhite, 20);
+            renderer.TextScale(0, 16, $"Cursor {Cursor.Pos.X}, {Cursor.Pos.Y}", Color.RayWhite, 20);
         }
 
         public override void Draw(EngineRenderer renderer)
