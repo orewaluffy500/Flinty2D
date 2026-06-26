@@ -3,19 +3,16 @@ using Raylib_cs;
 
 namespace Flinty.GameSystem
 {
-    public class EngineRenderer
+    public static class EngineRenderer
     {
-        public Engine Parent { get; }
+        public static Font SystemFont { get; private set; }
 
-        public Font SystemFont { get; }
-
-        public EngineRenderer(Engine parent_)
+        public static void Init()
         {
-            Parent = parent_;
             SystemFont = Raylib.LoadFont("data/Fonts/PixelifySans-Regular.ttf");
         }
 
-        public void Rectangle(RectShape rect, Raylib_cs.Color color)
+        public static void Rectangle(RectShape rect, Raylib_cs.Color color)
         {
             var pos = rect.Pos;
             var size = rect.Size;
@@ -23,7 +20,7 @@ namespace Flinty.GameSystem
             Raylib.DrawRectangle(pos.X, pos.Y, size.X, size.Y, color);
         }
 
-        public void RectangleLines(RectShape rect, Raylib_cs.Color color)
+        public static void RectangleLines(RectShape rect, Raylib_cs.Color color)
         {
             var pos = rect.Pos;
             var size = rect.Size;
@@ -31,14 +28,16 @@ namespace Flinty.GameSystem
             Raylib.DrawRectangleLines(pos.X, pos.Y, size.X, size.Y, color);
         }
 
-        public void Texture(Texture2D texture, RectShape source, RectShape dest, int rotation)
+        //                                  Region from texture  Destination rect
+        public static void Texture(Texture2D texture, RectShape source, RectShape dest, int rotation)
         {
             Raylib.DrawTexturePro(
                 texture, source.toRaylib(), dest.toRaylib(), Pos.Zero().ToVector(), rotation, Color.White
             );
         }
 
-        public void TextScale(float x, float y, string text, Color color, int fontSize = 24)
+        // Just draw text but use 0-100 resizable scale instead of raw 0-width scale.
+        public static void TextScale(float x, float y, string text, Color color, int fontSize = 24)
         {
             float scaleX = x / 100;
             float scaleY = y / 100;
@@ -46,12 +45,12 @@ namespace Flinty.GameSystem
             Raylib.DrawTextEx(SystemFont, text, new(scaleX * Raylib.GetScreenWidth(), scaleY * Raylib.GetScreenHeight()), fontSize, 2, color);
         }
 
-        public void Text(int x, int y, string text, Color color, int fontSize = 24)
+        public static void Text(int x, int y, string text, Color color, int fontSize = 24)
         {
             Raylib.DrawTextEx(SystemFont, text, new(x, y), fontSize, 2, color);
         }
 
-        public void TextOrigined(float x, float y, Pos origin, string text, Color color, int fontSize = 24)
+        public static void TextOrigined(float x, float y, Pos origin, string text, Color color, int fontSize = 24)
         {
             if (origin.IsZero())
             {
@@ -61,15 +60,15 @@ namespace Flinty.GameSystem
 
             var size = Raylib.MeasureTextEx(SystemFont, text, fontSize, 2);
 
-            float offsetX = origin.X * (size.X / Raylib.GetScreenWidth() * 100);
-            float offsetY = origin.Y * (size.Y / Raylib.GetScreenHeight() * 100);
+            float offsetX = origin.X * (size.X / Raylib.GetScreenWidth() * 100); // Get offset based on origin
+            float offsetY = origin.Y * (size.Y / Raylib.GetScreenHeight() * 100); // Same as above
 
 
             TextScale(x - offsetX, y - offsetY, text, color, fontSize);
         }
 
 
-        public void Line(Pos start, Pos end, Raylib_cs.Color color)
+        public static void Line(Pos start, Pos end, Raylib_cs.Color color)
         {
             Raylib.DrawLineV(start.ToVector(), end.ToVector(), color);
         }

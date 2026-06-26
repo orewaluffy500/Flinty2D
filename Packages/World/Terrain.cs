@@ -27,17 +27,17 @@ namespace Flinty.World
             Raylib.BeginMode2D(Player.Camera);
             ChunkManager.RenderAndUpdateChunks();
 
-            Player.Draw(Engine.Renderer);
+            Player.Draw();
             Raylib.EndMode2D();
 
             DrawHUD();
-            Engine.Renderer.Text(0, 0, Raylib.GetFPS().ToString(), Color.RayWhite);
+            EngineRenderer.Text(0, 0, Raylib.GetFPS().ToString(), Color.RayWhite);
         }
 
         public void DrawHUD()
         {
-            Engine.Renderer.TextOrigined(100, 0, new(1, 0), $"Blocks Frozen: {TicksFrozen}", TicksFrozen ? PreColors.CalmGreen : PreColors.CalmRed);
-            Player.DrawHUD(Engine.Renderer);
+            EngineRenderer.TextOrigined(100, 0, new(1, 0), $"Blocks Frozen: {TicksFrozen}", TicksFrozen ? PreColors.CalmGreen : PreColors.CalmRed);
+            Player.DrawHUD();
         }
 
         public void Update(float deltaTime)
@@ -47,7 +47,6 @@ namespace Flinty.World
 
         public void Once()
         {
-            Player.Update(1); // Head-tick
         }
 
         public void Final()
@@ -58,16 +57,17 @@ namespace Flinty.World
 
         public void Move(int x, int y, int dx, int dy, bool force = false)
         {
+            // Get the two blocks
             GetBlockEx(x, y, out Pos localBlockPos1, out Chunk chunk1, out Block? block1);
             GetBlockEx(dx, dy, out Pos localBlockPos2, out Chunk chunk2, out Block? block2);
 
-            if (block1 == null) return;
-            if (block2 != null && !force) return;
+            if (block1 == null) return; // Abort if target is null
+            if (block2 != null && !force) return; // Abort if destination exists and force isn't applied
             
-            block1?.Pos.Set(dx, dy);
+            block1?.Pos.Set(dx, dy); // Obviously not null but just for the sake of perfectionism we use ?.
 
-            chunk2.SetBlock(localBlockPos2.X, localBlockPos2.Y, block1);
-            chunk1.ClearBlock(localBlockPos1.X, localBlockPos1.Y);
+            chunk2.SetBlock(localBlockPos2.X, localBlockPos2.Y, block1); // Move the target to the destination
+            chunk1.ClearBlock(localBlockPos1.X, localBlockPos1.Y); // Clear the old location
         }
 
         
@@ -137,16 +137,17 @@ namespace Flinty.World
 
         public string GetBlockName(int x, int y)
         {
-            return GetBlock(x, y)?.Type ?? "air";
+            return GetBlock(x, y)?.Type ?? "air"; // Return block type or air
         }
 
         public bool IsBlock(int x, int y)
         {
-            return GetBlockName(x, y) != "air";
+            return GetBlockName(x, y) != "air"; // Return if said block is not air
         }
 
         public bool IsSolidBlock(int x, int y)
         {
+            // Return if said block isn't air and is solid (can collide.)
             var block = GetBlock(x, y);
             if (block is null) return false;
             

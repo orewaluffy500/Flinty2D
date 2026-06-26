@@ -6,17 +6,21 @@ namespace Flinty.World
 {
     public class Chunk(Pos pos)
     {
-        public Block?[,] Blocks { set; get; } = new Block[Preferences.CHUNK_SIZE, Preferences.CHUNK_SIZE];
+        public Block?[] Blocks { set; get; } = new Block[Preferences.CHUNK_SIZE * Preferences.CHUNK_SIZE];
         public Pos Pos { get; } = pos;
 
+        public int BlockIndex(int x, int y)
+        {
+            return x + (y * Preferences.CHUNK_SIZE);
+        }
         public void SetBlock(int x, int y, Block? block)
         {
-            Blocks[x, y] = block;
+            Blocks[BlockIndex(x, y)] = block;
         }
 
         public void SetBlockIfAbsent(int x, int y, Block? block)
         {
-            if (Blocks[x, y] == null)
+            if (Blocks[BlockIndex(x, y)] == null)
             {
                 SetBlock(x, y, block);
             }
@@ -25,22 +29,22 @@ namespace Flinty.World
 
         public void ClearBlock(int x, int y)
         {
-            Blocks[x, y] = null;
+            Blocks[BlockIndex(x, y)] = null;
         }
 
         public Block? GetBlock(int x, int y)
         {
-            return Blocks[x, y];
+            return Blocks[BlockIndex(x, y)];
         }
 
         public void MoveBlock(int x, int y, int dx, int dy, bool force = false)
         {
-            if (Blocks[x, y] == null) return;
+            if (Blocks[BlockIndex(x, y)] == null) return;
 
-            if (Blocks[dx, dy] != null && !force) return;
+            if (Blocks[BlockIndex(dx, dy)] != null && !force) return;
 
-            Blocks[dx, dy] = Blocks[x, y];
-            Blocks[x, y] = null;
+            Blocks[BlockIndex(dx, dy)] = Blocks[BlockIndex(x, y)];
+            Blocks[BlockIndex(x, y)] = null;
         }
 
 
@@ -80,13 +84,13 @@ namespace Flinty.World
 
         // Draws a faint grey border rectangle around the chunk boundary, scaled from chunk-space to pixel-space.
         // The low alpha value (5) makes it a subtle debug overlay rather than a solid outline
-        public static void DrawDecors(Chunk chunk, EngineRenderer engineRenderer)
+        public static void DrawDecors(Chunk chunk)
         {
             Pos worldPos = chunk.Pos.Mul(Preferences.CHUNK_SIZE * Preferences.TILE_SIZE);
             Size size = Size.ChunkSize().Mul(Preferences.TILE_SIZE).ToSize();
 
-            engineRenderer.RectangleLines(new(worldPos, size), new(70, 70, 70, 50));
-            engineRenderer.Text(worldPos.X, worldPos.Y, $"{chunk.Pos.X}, {chunk.Pos.Y}", new(80, 80, 80), 14);
+            EngineRenderer.RectangleLines(new(worldPos, size), new(70, 70, 70, 50));
+            EngineRenderer.Text(worldPos.X, worldPos.Y, $"{chunk.Pos.X}, {chunk.Pos.Y}", new(80, 80, 80), 14);
         }
     }
 }

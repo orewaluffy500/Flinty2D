@@ -37,7 +37,7 @@ public class ChunkManager(Terrain t)
             // Optionally overlay chunk border rectangles for debugging
             if (Preferences.DRAW_CHUNK_DECORS)
             {
-                ChunkHelpers.DrawDecors(chunk, Terrain.Engine.Renderer);
+                ChunkHelpers.DrawDecors(chunk);
             }
 
             foreach (Block? block in chunk.Blocks)
@@ -49,7 +49,7 @@ public class ChunkManager(Terrain t)
                     Terrain.Engine.ModEngine.Callback_BlockTick(block.Pos.X, block.Pos.Y, block.Type);
                 }
 
-                block.Draw(Terrain.Engine.Renderer);
+                block.Draw();
             }
         }
     }

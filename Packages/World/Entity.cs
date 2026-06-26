@@ -15,12 +15,12 @@ namespace Flinty.World
             
         }
 
-        public virtual void Draw(EngineRenderer renderer)
+        public virtual void Draw()
         {
             
         }
 
-        public virtual void DrawHUD(EngineRenderer renderer)
+        public virtual void DrawHUD()
         {
             
         }

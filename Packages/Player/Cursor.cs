@@ -11,18 +11,16 @@ namespace Flinty.Player
     {
         public PlayerEntity Player { get; private set; } = player;
         public Terrain Terrain { get; private set; } = terrain;
-        public Pos OldCursorPos { get; } = Pos.Zero();
-        public float timeTillBuild = 0.05f;
 
-        public override void Draw(EngineRenderer renderer)
+        public override void Draw()
         {
-            renderer.Line(
+            EngineRenderer.Line(
                 Pos.Mul(Preferences.TILE_SIZE).Change(Preferences.TILE_SIZE / 2),
                 Player.Pos.Mul(Preferences.TILE_SIZE).Change(Preferences.TILE_SIZE / 2),
                 new(230, 230, 240, 80)
             );
 
-            renderer.Rectangle(
+            EngineRenderer.Rectangle(nti
                 new(Pos.Mul(Preferences.TILE_SIZE), Size.TileSize()),
                 new(100, 255, 100, 140)
             );
@@ -32,21 +30,14 @@ namespace Flinty.Player
         {
             UpdateAndClampPosition();
 
-            if (timeTillBuild > 0f)
-            {
-                timeTillBuild -= deltaTime;
-            }
-
             if (MouseMap.ButtonDown("RMB"))
             {
                 Terrain.Place(Pos.X, Pos.Y, Player.Inventory.GetSelection());
-                timeTillBuild = 0.05f;
             }
 
             else if (MouseMap.ButtonDown("LMB"))
             {
                 Terrain.Break(Pos.X, Pos.Y);
-                timeTillBuild = 0.05f;
             }
         }
 
@@ -64,11 +55,11 @@ namespace Flinty.Player
 
         public void ClampCursor(int mouseX, int mouseY)
         {
-            int minX = (int)MathF.Floor(Player.Pos.X - 5);
-            int maxX = (int)MathF.Floor(Player.Pos.X + 5);
+            int minX = Player.Pos.X - 5;
+            int maxX = Player.Pos.X + 5;
 
-            int minY = (int)MathF.Floor(Player.Pos.Y - 5);
-            int maxY = (int)MathF.Floor(Player.Pos.Y + 5);
+            int minY = Player.Pos.Y - 5;
+            int maxY = Player.Pos.Y + 5;
 
             Pos.X = Math.Clamp(mouseX, minX, maxX);
             Pos.Y = Math.Clamp(mouseY, minY, maxY);

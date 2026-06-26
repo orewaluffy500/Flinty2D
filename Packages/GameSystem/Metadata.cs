@@ -15,7 +15,7 @@ public class Metadata
             return;
         }
 
-        Data[name] = value; // ignore the warning
+        Data[name] = value;
     }
 
     public object? Get(string name)

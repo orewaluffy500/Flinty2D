@@ -87,7 +87,7 @@ namespace Flinty.Player
 
         public void HandleBlockCycle()
         {
-            if (KeyMap.KeyPressed("CycleBlocks"))
+            if (KeyMap.KeyPressed("CycleBlocks")) // CycleBlocks is by default an alias for Tab
             {
                 Inventory.AdvanceSelection();
             }
@@ -95,38 +95,38 @@ namespace Flinty.Player
 
         public void HandleMisc()
         {
-            if (KeyMap.KeyPressed("G"))
+            if (KeyMap.KeyPressed("G")) // Freeze and unfreeze ticking blocks
             {
                 Terrain.TicksFrozen = !Terrain.TicksFrozen;
             }
         }
 
-        public override void DrawHUD(EngineRenderer renderer)
+        public override void DrawHUD()
         {
-            var entry = BlockRegistry.GetBlockEntry(Inventory.GetSelection());
+            var entry = BlockRegistry.GetBlockEntry(Inventory.GetSelection()); // Get the information for the selected block
 
-            var color = entry?.FallbackColor ?? Color.RayWhite;
+            var color = entry?.FallbackColor ?? Color.RayWhite; // Use the selected block's color or white by default
 
             string selecName = Inventory.GetSelection();
 
-            renderer.TextScale(0, 5, selecName.ToUpper(), color);
-            renderer.TextScale(0, 8, "[TAB] to cycle.", Color.RayWhite, 20);
-            renderer.TextScale(0, 13, $"Player {Pos.X}, {Pos.Y}", Color.RayWhite, 20);
-            renderer.TextScale(0, 16, $"Cursor {Cursor.Pos.X}, {Cursor.Pos.Y}", Color.RayWhite, 20);
+            EngineRenderer.TextScale(0, 5, selecName.ToUpper(), color); // Draw selection in upper case
+            EngineRenderer.TextScale(0, 8, "[TAB] to cycle.", Color.RayWhite, 20); // Draw how to cycle blocks
+            EngineRenderer.TextScale(0, 13, $"Player {Pos.X}, {Pos.Y}", Color.RayWhite, 20); // Player co-ords
+            EngineRenderer.TextScale(0, 16, $"Cursor {Cursor.Pos.X}, {Cursor.Pos.Y}", Color.RayWhite, 20); // Cursor co-ords
         }
 
-        public override void Draw(EngineRenderer renderer)
+        public override void Draw()
         {
-            Cursor.Draw(renderer);
-            renderer.Rectangle(new(Pos.Mul(Preferences.TILE_SIZE), Size.TileSize()), new(123, 123, 255));
+            Cursor.Draw(); // Draw cursor
+            EngineRenderer.Rectangle(new(Pos.Mul(Preferences.TILE_SIZE), Size.TileSize()), new(123, 123, 255)); // Draw player
         }
 
 
 
         public void UpdateCamera()
         {
-            Camera.Offset = new(Raylib.GetScreenWidth() / 2, Raylib.GetScreenHeight() / 2);
-            Camera.Target = Vector2.Lerp(Camera.Target, Pos.Mul(Preferences.TILE_SIZE).ToVector(), 0.2f);
+            Camera.Offset = new(Raylib.GetScreenWidth() / 2, Raylib.GetScreenHeight() / 2); // Get camera offset
+            Camera.Target = Vector2.Lerp(Camera.Target, Pos.Mul(Preferences.TILE_SIZE).ToVector(), 0.2f); // Lerp camera to player
         }
     }
 }

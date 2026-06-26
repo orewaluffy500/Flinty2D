@@ -35,7 +35,7 @@ namespace Flinty.World
         }
 
 
-        public override void Draw(EngineRenderer renderer)
+        public override void Draw()
         {
 
             // Validate color
@@ -58,7 +58,7 @@ namespace Flinty.World
             // Draw
             if (tex == null)
             {
-                renderer.Rectangle(
+                EngineRenderer.Rectangle(
                     new(Pos.Mul(Preferences.TILE_SIZE), TileSize),
                     finalColor
                 );
@@ -67,7 +67,7 @@ namespace Flinty.World
             }
 
 
-            renderer.Texture(
+            EngineRenderer.Texture(
                 (Texture2D)tex, new(Pos.Zero(), Size.TileSize()), new(Pos.Mul(Preferences.TILE_SIZE), Size.TileSize()), 0
             );
             

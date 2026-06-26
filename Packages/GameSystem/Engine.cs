@@ -14,7 +14,6 @@ namespace Flinty.GameSystem
         public string Caption { get; }
         public Color BackgroundColor { set; get; }
 
-        public EngineRenderer Renderer { get; }
         public Terrain Terrain { get; }
 
         public Clock Clock { get; }
@@ -42,7 +41,7 @@ namespace Flinty.GameSystem
             Raylib.SetTargetFPS(60);
 
             // Initialize systems
-            Renderer = new(this);
+            EngineRenderer.Init();
             Terrain = new(this);
             Clock = new();
 
