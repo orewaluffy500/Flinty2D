@@ -9,42 +9,44 @@ namespace Flinty.World
         public Block?[] Blocks { set; get; } = new Block[Preferences.CHUNK_SIZE * Preferences.CHUNK_SIZE];
         public Pos Pos { get; } = pos;
 
-        public int BlockIndex(int x, int y)
+        public static int BlockIndex(int x, int y)
         {
             return x + (y * Preferences.CHUNK_SIZE);
         }
         public void SetBlock(int x, int y, Block? block)
         {
+            if (!IsNull(x, y)) return;
+            
             Blocks[BlockIndex(x, y)] = block;
         }
 
-        public void SetBlockIfAbsent(int x, int y, Block? block)
-        {
-            if (Blocks[BlockIndex(x, y)] == null)
-            {
-                SetBlock(x, y, block);
-            }
-        }
-
-
         public void ClearBlock(int x, int y)
         {
+            if (IsNull(x, y)) return;
+
             Blocks[BlockIndex(x, y)] = null;
         }
 
         public Block? GetBlock(int x, int y)
         {
+            if (IsNull(x, y)) return null;
+
             return Blocks[BlockIndex(x, y)];
         }
 
-        public void MoveBlock(int x, int y, int dx, int dy, bool force = false)
+        public bool IsNull(int x, int y)
         {
-            if (Blocks[BlockIndex(x, y)] == null) return;
+            if (x < 0 || x >= Preferences.CHUNK_SIZE)
+            {
+                return true;
+            }
 
-            if (Blocks[BlockIndex(dx, dy)] != null && !force) return;
+            if (y < 0 || y >= Preferences.CHUNK_SIZE)
+            {
+                return true;
+            }
 
-            Blocks[BlockIndex(dx, dy)] = Blocks[BlockIndex(x, y)];
-            Blocks[BlockIndex(x, y)] = null;
+            return Blocks[BlockIndex(x,y)] == null;
         }
 
 

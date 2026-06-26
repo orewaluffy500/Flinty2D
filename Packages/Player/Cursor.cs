@@ -20,7 +20,7 @@ namespace Flinty.Player
                 new(230, 230, 240, 80)
             );
 
-            EngineRenderer.Rectangle(nti
+            EngineRenderer.Rectangle(
                 new(Pos.Mul(Preferences.TILE_SIZE), Size.TileSize()),
                 new(100, 255, 100, 140)
             );

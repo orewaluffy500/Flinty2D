@@ -25,7 +25,7 @@ local function block_tick(x, y, name)
     local block_near = API.terrain.get_block(x + bx, y + by)
     if block_near ~= "air" and block_near ~= "gobbler" and block_near ~= "rock" then
         if math.random(1, 4) == 1 then
-            API.terrain.move(x, y, x+bx, y+by)
+            API.terrain.move(x, y, x+bx, y+by, true)
             reset_tick_til_move(x+bx, y+by)
             return
         end

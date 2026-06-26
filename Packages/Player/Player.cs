@@ -73,6 +73,7 @@ namespace Flinty.Player
             if (!Velocity.IsZero())
             {
                 StepDelay = Preferences.STEP_DELAY;
+                Terrain.Engine.ModEngine.Callback_PlayerMove(Pos.X, Pos.Y, Pos.X + Velocity.X, Pos.Y + Velocity.Y);
             }
 
 

@@ -85,6 +85,24 @@ namespace Flinty.World
 
             // Call script event
             Engine.ModEngine.Callback_BlockPlaced(x, y, typeName);
+            UpdateBlocks(x, y, typeName);
+        }
+
+        private void UpdateBlocks(int x, int y, string typeName)
+        {
+            for (int i = -1; i <= 1; i++)
+            {
+                for (int j = -1; j <= 1; j++)
+                {
+                    if (i == 0 && j == 0) continue;
+
+                    GetBlockEx(x + j, y + i, out Pos _pos, out Chunk _c, out Block? tmp);
+                    if (tmp != null)
+                    {
+                        Engine.ModEngine.Callback_BlockUpdated(x, y, typeName, x + j, y + i, tmp.Type);
+                    }
+                }
+            }
         }
 
         public void Break(int x, int y)
@@ -98,7 +116,8 @@ namespace Flinty.World
             
             if (continue_ == false) return; // Must use explicit check to ensure both nil and true mean continue (for sake of simplicity    )
 
-            chunk.ClearBlock(localBlockPos.X, localBlockPos.Y);                
+            chunk.ClearBlock(localBlockPos.X, localBlockPos.Y);
+            UpdateBlocks(x, y, block.Type);
         }
 
         private void GetBlockEx(int x, int y, out Pos localBlockPos, out Chunk chunk, out Block? block)
