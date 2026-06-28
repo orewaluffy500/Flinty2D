@@ -46,7 +46,7 @@ namespace Flinty.Assets
 
             foreach (var pair in Registry)
             {
-                if (!pair.Key.StartsWith('_'))
+                if (!pair.Key.EndsWith("__"))
                 {
                     VisibleRegistry.Add(pair.Key);
                 }

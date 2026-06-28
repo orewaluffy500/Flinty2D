@@ -19,6 +19,7 @@ public class PlayerModule(string moduleName, APIBuilder builder, ModEngine engin
         RegisterFunc("teleport", nameof(Teleport));
         RegisterFunc("move", nameof(Move));
         RegisterFunc("meta", nameof(Meta));
+        RegisterFunc("opt_meta", nameof(OptMeta));
 
         // Vararg functions
 
@@ -73,6 +74,11 @@ public class PlayerModule(string moduleName, APIBuilder builder, ModEngine engin
         }
 
         return Engine.Player.Metadata.Get(name);
+    }
+
+    public object OptMeta(string name, object default_)
+    {
+        return Engine.Player.Metadata.OptGet(name, default_);
     }
 
     public int CursorX(params object[] args)

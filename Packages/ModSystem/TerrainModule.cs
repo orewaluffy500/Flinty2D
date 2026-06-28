@@ -20,6 +20,7 @@ public class TerrainModule : IModule
         RegisterFunc("get_block", nameof(GetBlock));
         RegisterFunc("is_empty", nameof(IsEmpty));
         RegisterFunc("block_meta", nameof(BlockMeta));
+        RegisterFunc("block_opt_meta", nameof(OptBlockMeta));
     }
 
 
@@ -35,7 +36,7 @@ public class TerrainModule : IModule
 
     public string GetBlock(int x, int y)
     {
-        return Terrain.GetBlockName(x, y);
+        return Terrain.GetBlockName(x, y); // return air if theres nothing there
     }
 
     public object? BlockMeta(int x, int y, string name, params object[] args)
@@ -57,9 +58,21 @@ public class TerrainModule : IModule
         return block.Metadata.Get(name);
     }
 
+    public object? OptBlockMeta(int x, int y, string name, object def)
+    {
+        Block? block = Terrain.GetBlock(x, y);
+        if (block == null)
+        {
+            Logging.Error("ModSystem.TerrainModule", $"Could not find valid block at {x} , {y}");
+            return null;
+        }
+
+        return block.Metadata.OptGet(name, def);
+    }
+
     public void MoveBlock(int x, int y, int dx, int dy, params object[] args)
     {
-        Terrain.Move(x, y, dx, dy, args.Length > 0 && args[0] is bool b && b);
+        Terrain.Move(x, y, dx, dy, args.Length > 0 && args[0] is bool b && b); // vararg 1 is whether or not you want to force move it regardless of the block there or only move it when a block isnt there
     }
 
     public bool IsEmpty(int x, int y) => !Terrain.IsBlock(x, y);
