@@ -115,6 +115,10 @@ public class ModEngine(Engine engine)
         Callback_Block("tick", name, x, y, name);
     }
 
+    public void Callback_BlockRandomTick(int x, int y, string name)
+    {
+        Callback_Block("random_tick", name, x, y, name);
+    }
     
     public bool Callback_BlockBreaking(int x, int y, string name)
     {

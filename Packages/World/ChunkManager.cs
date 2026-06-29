@@ -40,11 +40,16 @@ public class ChunkManager(Terrain t)
                 ChunkHelpers.DrawDecors(chunk);
             }
 
+            if (ticking && !Terrain.TicksFrozen)
+            {
+                chunk.DoRandomTick(Terrain);
+            }
+
             foreach (Block? block in chunk.Blocks)
             {
                 if (block == null) continue;    // Sparse array — skip empty cells
 
-                if (ticking && BlockRegistry.IsActive(block.Type) && !Terrain.TicksFrozen)
+                if (ticking && !Terrain.TicksFrozen)
                 {
                     Terrain.Engine.ModEngine.Callback_BlockTick(block.Pos.X, block.Pos.Y, block.Type);
                 }

@@ -9,6 +9,11 @@ local function ticked(block_x, block_y, block_name)
     -- Runs every time this block is ticked
 end
 
+local function random_tick(block_x,block_y, block_name)
+    -- Runs for 3 blocks per chunk
+    -- Generally better than normal tick but for cooldowns you might want to use normal ticks.
+end
+
 local function breaking(block_x, block_y, block_name)
     API.out.info("breaking block " .. block_name .. " at " .. block_x .. ", " .. block_y)
     -- Log that we are breaking S block at x and y
@@ -27,7 +32,9 @@ end
 -- Connecting the events
 -- For all blocks you use `block.any` otherwise for one single type of block you use `block.<block_name>`
 
+
 API.event.connect("block.any.placed", placed)
 API.event.connect("block.any.tick", ticked)
+API.event.connect("block.any.random_tick", random_tick)
 API.event.connect("block.any.updated", updated)
 API.event.connect("block.any.breaking", breaking)

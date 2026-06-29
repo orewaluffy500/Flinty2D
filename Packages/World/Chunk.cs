@@ -1,3 +1,4 @@
+using Flinty.Assets;
 using Flinty.GameMath;
 using Flinty.GameSystem;
 using Flinty.Globals;
@@ -15,7 +16,9 @@ namespace Flinty.World
         }
         public void SetBlock(int x, int y, Block? block)
         {
-            if (!IsNull(x, y)) return;
+            // Bounds check only, no occupancy check
+            if (x < 0 || x >= Preferences.CHUNK_SIZE) return;
+            if (y < 0 || y >= Preferences.CHUNK_SIZE) return;
             
             Blocks[BlockIndex(x, y)] = block;
         }
@@ -47,6 +50,21 @@ namespace Flinty.World
             }
 
             return Blocks[BlockIndex(x,y)] == null;
+        }
+
+        public void DoRandomTick(Terrain terrain)
+        {
+            var blocks = Blocks.Where(b => b != null)
+                        .OrderBy(_ => Random.Shared.Next())
+                        .Take(Preferences.RANDOM_TICKS)
+                        .ToArray();
+            
+            foreach (Block? block in blocks){
+                if (block != null)
+                {
+                    terrain.Engine.ModEngine.Callback_BlockRandomTick(block.Pos.X, block.Pos.Y, block.Type);
+                }
+            }
         }
 
 

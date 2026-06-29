@@ -15,6 +15,7 @@ public class TerrainModule : IModule
         base.Build();
 
         RegisterFunc("place", nameof(Place));
+        RegisterFunc("fill", nameof(Fill));
         RegisterFunc("move", nameof(MoveBlock));
         RegisterFunc("destroy", nameof(Break));
         RegisterFunc("get_block", nameof(GetBlock));
@@ -24,14 +25,19 @@ public class TerrainModule : IModule
     }
 
 
-    public void Place(int x, int y, string name, bool replace = false)
+    public bool Place(int x, int y, string name, bool replace = false, bool raw = false)
     {
-        Terrain.Place(x, y, name, replace);
+        return Terrain.Place(x, y, name, replace, raw);
     }
 
-    public void Break(int x, int y)
+    public bool Break(int x, int y)
     {
-        Terrain.Break(x, y);
+        return Terrain.Break(x, y);
+    }
+
+    public void Fill(int sx, int sy, int ex, int ey, string name, bool replace = false)
+    {
+        Terrain.Fill(sx, sy, ex, ey, name, replace);
     }
 
     public string GetBlock(int x, int y)
@@ -70,9 +76,9 @@ public class TerrainModule : IModule
         return block.Metadata.OptGet(name, def);
     }
 
-    public void MoveBlock(int x, int y, int dx, int dy, params object[] args)
+    public bool MoveBlock(int x, int y, int dx, int dy, bool force = false)
     {
-        Terrain.Move(x, y, dx, dy, args.Length > 0 && args[0] is bool b && b); // vararg 1 is whether or not you want to force move it regardless of the block there or only move it when a block isnt there
+        return Terrain.Move(x, y, dx, dy, force);
     }
 
     public bool IsEmpty(int x, int y) => !Terrain.IsBlock(x, y);

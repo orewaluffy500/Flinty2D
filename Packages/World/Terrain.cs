@@ -51,41 +51,45 @@ namespace Flinty.World
 
         public void Final()
         {
-            
+
         }
 
 
-        public void Move(int x, int y, int dx, int dy, bool force = false)
+        public bool Move(int x, int y, int dx, int dy, bool force = false)
         {
             // Get the two blocks
             GetBlockEx(x, y, out Pos localBlockPos1, out Chunk chunk1, out Block? block1);
             GetBlockEx(dx, dy, out Pos localBlockPos2, out Chunk chunk2, out Block? block2);
 
-            if (block1 == null) return; // Abort if target is null
-            if (block2 != null && !force) return; // Abort if destination exists and force isn't applied
-            
+            if (block1 == null) return false; // Abort if target is null
+            if (block2 != null && !force) return false; // Abort if destination exists and force isn't applied
+
             block1?.Pos.Set(dx, dy); // Obviously not null but just for the sake of perfectionism we use ?.
 
             chunk2.SetBlock(localBlockPos2.X, localBlockPos2.Y, block1); // Move the target to the destination
             chunk1.ClearBlock(localBlockPos1.X, localBlockPos1.Y); // Clear the old location
+
+            return true;
         }
 
-        
-        public void Place(int x, int y, string typeName, bool replace = false)
+
+        public bool Place(int x, int y, string typeName, bool replace = false, bool raw = false)
         {
-            if (!BlockRegistry.IsRegistered(typeName)) return;
+            if (!BlockRegistry.IsRegistered(typeName)) return false;
 
             GetBlockEx(x, y, out Pos localBlockPos, out Chunk chunk, out Block? block);
 
             // Exit if the block already exists and we can't replace it.
-            if (block != null && !replace) return;
+            if (block != null && !replace) return false;
 
             // Set block
             chunk.SetBlock(localBlockPos.X, localBlockPos.Y, new Block(x, y, typeName, this));
 
             // Call script event
             Engine.ModEngine.Callback_BlockPlaced(x, y, typeName);
-            UpdateBlocks(x, y, typeName);
+            if (!raw) UpdateBlocks(x, y, typeName);
+            
+            return true;
         }
 
         private void UpdateBlocks(int x, int y, string typeName)
@@ -105,19 +109,35 @@ namespace Flinty.World
             }
         }
 
-        public void Break(int x, int y)
+        public bool Break(int x, int y)
         {
             GetBlockEx(x, y, out Pos localBlockPos, out Chunk chunk, out Block? block);
 
-            if (block == null) return;
+            if (block == null) return false;
 
             // Handle script event
             bool continue_ = Engine.ModEngine.Callback_BlockBreaking(x, y, block.Type);
-            
-            if (continue_ == false) return; // Must use explicit check to ensure both nil and true mean continue (for sake of simplicity    )
+
+            if (continue_ == false) return false; // Must use explicit check to ensure both nil and true mean continue (for sake of simplicity    )
 
             chunk.ClearBlock(localBlockPos.X, localBlockPos.Y);
             UpdateBlocks(x, y, block.Type);
+
+            return true;
+        }
+
+        public void Fill(int x1, int y1, int x2, int y2, string name, bool replace = false)
+        {
+            int incX = x1 <= x2 ? 1 : -1;
+            int incY = y1 <= y2 ? 1 : -1;
+
+            for (int y = y1; y != y2 + incY; y += incY)
+            {
+                for (int x = x1; x != x2 + incX; x += incX)
+                {
+                    Place(x, y, name, replace, false);
+                }
+            }
         }
 
         private void GetBlockEx(int x, int y, out Pos localBlockPos, out Chunk chunk, out Block? block)
@@ -150,7 +170,7 @@ namespace Flinty.World
 
             // Get nullable block
             Block? block = chunk.GetBlock(localBlockPos.X, localBlockPos.Y);
-            
+
             return block;
         }
 
@@ -169,7 +189,7 @@ namespace Flinty.World
             // Return if said block isn't air and is solid (can collide.)
             var block = GetBlock(x, y);
             if (block is null) return false;
-            
+
             return block.CanCollide;
         }
     }

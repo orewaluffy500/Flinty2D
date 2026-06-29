@@ -12,7 +12,7 @@ API.registry.register("my_mod:obsidian", "", 20, 20, 30)
 API.registry.register("my_mod:glowlight", "Textures/mymod/glowlight.png", 0, 0, 0) -- I left fallback color as black
 
 -- Add a hidden block that the player can't use
--- End block name with `__` to indicate its hidden
-API.registry.register("my_mod:crying_obsidian__", "", 30, 50, 30)
+-- Start block name with `hid ` to indicate its hidden
+API.registry.register("hid my_mod:crying_obsidian", "", 30, 50, 30)
 
 -- That's it for registering new blocks.
