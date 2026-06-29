@@ -14,9 +14,6 @@ public class RegistryModule : IModule
         base.Build();
 
         RegisterFunc("register", nameof(RegisterBlock));
-        RegisterFunc("block_active", nameof(BlockActive));
-        RegisterFunc("activate", nameof(Activate));
-        RegisterFunc("deactivate", nameof(Deactivate));
     }
 
 
@@ -39,23 +36,4 @@ public class RegistryModule : IModule
         BlockRegistry.RegisterNew(name, texName, color, canCollide);
     }
 
-    public bool BlockActive(string name, params object[] args)
-    {
-        if (args.Length > 0 && args[0] is bool b)
-        {
-            BlockRegistry.SetActive(name, b, true);
-        }
-
-        return BlockRegistry.IsActive(name);
-    }
-
-    public void Activate(string name)
-    {
-        BlockRegistry.SetActive(name, true, true);
-    }
-
-    public void Deactivate(string name)
-    {
-        BlockRegistry.SetActive(name, false, true);
-    }
 }
