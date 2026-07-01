@@ -1,5 +1,6 @@
 
 using Flinty.Assets;
+using Flinty.Globals;
 using Flinty.ModSystem;
 using Flinty.World;
 using Raylib_cs;

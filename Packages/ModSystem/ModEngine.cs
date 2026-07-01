@@ -23,13 +23,13 @@ public class ModEngine(Engine engine)
     public List<ScriptMod> Mods { get; } = [];
 
 
-    public static readonly string GAME_API_PREFIX = "API";
+    public static readonly string GAME_API_PREFIX = "NATIVE";
     public static readonly string GAME_CORE_MASTER_MODULE_NAME = "core";
 
     private int ModIndex { get; set; } = 0;
     public void InitializeSystem()
     {
-        
+               
         Logging.Message("ModSystem", Lua["_VERSION"] is string s ? s : "N/A");
 
         Lua.DoString(@"

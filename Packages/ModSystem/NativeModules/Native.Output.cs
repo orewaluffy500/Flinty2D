@@ -2,7 +2,7 @@ using NLua;
 
 namespace Flinty.ModSystem;
 
-public class OutputModule(string moduleName, APIBuilder builder, ModEngine engine) : IModule(moduleName, builder, engine)
+public class NativeOutputModule(string moduleName, APIBuilder builder, ModEngine engine) : INativeModule(moduleName, builder, engine)
 {
 
     public override void Build()

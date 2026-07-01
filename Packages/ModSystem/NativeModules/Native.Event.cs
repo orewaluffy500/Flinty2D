@@ -4,9 +4,9 @@ using NLua;
 namespace Flinty.ModSystem;
 
 
-public class EventModule : IModule
+public class NativeEventModule : INativeModule
 {
-    public EventModule(string moduleName, APIBuilder builder, ModEngine engine) : base(moduleName, builder, engine)
+    public NativeEventModule(string moduleName, APIBuilder builder, ModEngine engine) : base(moduleName, builder, engine)
     {
     }
 

@@ -4,7 +4,7 @@ using Flinty.World;
 
 namespace Flinty.ModSystem;
 
-public class IModule(string moduleName, APIBuilder builder, ModEngine engine)
+public class INativeModule(string moduleName, APIBuilder builder, ModEngine engine)
 {
     public APIBuilder Builder { get; } = builder;
     public ModEngine Engine { get; } = engine;

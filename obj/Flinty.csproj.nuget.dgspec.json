@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "d:\\Flinty\\Flinty\\Flinty.csproj": {}
+    "D:\\Flinty\\Flinty\\Flinty.csproj": {}
   },
   "projects": {
-    "d:\\Flinty\\Flinty\\Flinty.csproj": {
+    "D:\\Flinty\\Flinty\\Flinty.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "d:\\Flinty\\Flinty\\Flinty.csproj",
+        "projectUniqueName": "D:\\Flinty\\Flinty\\Flinty.csproj",
         "projectName": "Flinty",
-        "projectPath": "d:\\Flinty\\Flinty\\Flinty.csproj",
+        "projectPath": "D:\\Flinty\\Flinty\\Flinty.csproj",
         "packagesPath": "C:\\Users\\Lenovo\\.nuget\\packages\\",
-        "outputPath": "d:\\Flinty\\Flinty\\obj\\",
+        "outputPath": "D:\\Flinty\\Flinty\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Lenovo\\AppData\\Roaming\\NuGet\\NuGet.Config"

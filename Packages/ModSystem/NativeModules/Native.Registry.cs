@@ -3,9 +3,9 @@ using Raylib_cs;
 
 namespace Flinty.ModSystem;
 
-public class RegistryModule : IModule
+public class NativeRegistryModule : INativeModule
 {
-    public RegistryModule(string moduleName, APIBuilder builder, ModEngine engine) : base(moduleName, builder, engine)
+    public NativeRegistryModule(string moduleName, APIBuilder builder, ModEngine engine) : base(moduleName, builder, engine)
     {
     }
 

@@ -4,9 +4,9 @@ using Flinty.World;
 namespace Flinty.ModSystem;
 
 
-public class TerrainModule : IModule
+public class NativeTerrainModule : INativeModule
 {
-    public TerrainModule(string moduleName, APIBuilder builder, ModEngine engine) : base(moduleName, builder, engine)
+    public NativeTerrainModule(string moduleName, APIBuilder builder, ModEngine engine) : base(moduleName, builder, engine)
     {
     }
 

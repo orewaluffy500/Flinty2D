@@ -4,7 +4,7 @@ using NLua;
 namespace Flinty.ModSystem;
 
 
-public class PlayerModule(string moduleName, APIBuilder builder, ModEngine engine) : IModule(moduleName, builder, engine)
+public class NativePlayerModule(string moduleName, APIBuilder builder, ModEngine engine) : INativeModule(moduleName, builder, engine)
 {
 
     public override void Build()
