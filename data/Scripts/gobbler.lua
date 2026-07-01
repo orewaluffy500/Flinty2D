@@ -53,7 +53,5 @@ end
 
 API.registry.register("gobbler", "gobbler.png", 20, 100, 20, false)
 
-API.registry.activate("gobbler")
-
-API.event.connect("block.gobbler.placed", block_placed)
-API.event.connect("block.gobbler.random_tick", block_tick)
+core.connect_block_event('gobbler', 'placed', block_placed)
+core.connect_block_event('gobbler', 'random_tick', block_tick)

@@ -155,7 +155,19 @@ namespace Flinty.World
             block = chunk.GetBlock(localBlockPos.X, localBlockPos.Y);
         }
 
+        public void SetBlock(int x, int y, string name)
+        {
+            GetBlockEx(x, y, out Pos localBlockPos, out Chunk chunk, out Block? alreadyThere);
 
+            if (alreadyThere != null) {
+                alreadyThere.Type = name;
+                alreadyThere.BlockEntry = BlockRegistry.GetBlockEntry(name);
+            }
+            else
+            {
+                chunk.SetBlock(x, y, new Block(x, y, name, this));
+            }
+        }
 
         public Block? GetBlock(int x, int y)
         {

@@ -24,6 +24,7 @@ public class ModEngine(Engine engine)
 
 
     public static readonly string GAME_API_PREFIX = "API";
+    public static readonly string GAME_CORE_MASTER_MODULE_NAME = "core";
 
     private int ModIndex { get; set; } = 0;
     public void InitializeSystem()

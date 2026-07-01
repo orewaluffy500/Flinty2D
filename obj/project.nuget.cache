@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "PsaMsnD/VRw=",
+  "dgSpecHash": "3lgRak2Vmck=",
   "success": true,
-  "projectFilePath": "D:\\Flinty\\Flinty\\Flinty.csproj",
+  "projectFilePath": "d:\\Flinty\\Flinty\\Flinty.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Lenovo\\.nuget\\packages\\keralua\\1.4.9\\keralua.1.4.9.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.net.illink.tasks\\10.0.9\\microsoft.net.illink.tasks.10.0.9.nupkg.sha512",

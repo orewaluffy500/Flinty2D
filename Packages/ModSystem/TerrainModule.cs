@@ -21,9 +21,15 @@ public class TerrainModule : IModule
         RegisterFunc("get_block", nameof(GetBlock));
         RegisterFunc("is_empty", nameof(IsEmpty));
         RegisterFunc("block_meta", nameof(BlockMeta));
+        RegisterFunc("block_has_meta", nameof(HasMeta));
         RegisterFunc("block_opt_meta", nameof(OptBlockMeta));
+        RegisterFunc("set_block", nameof(SetBlock));
     }
 
+    public void SetBlock(int x, int y, string name)
+    {
+        Terrain.SetBlock(x, y, name);
+    }
 
     public bool Place(int x, int y, string name, bool replace = false, bool raw = false)
     {
@@ -74,6 +80,18 @@ public class TerrainModule : IModule
         }
 
         return block.Metadata.OptGet(name, def);
+    }
+
+    public bool HasMeta(int x, int y, string name)
+    {
+        Block? block = Terrain.GetBlock(x, y);
+        if (block == null)
+        {
+            Logging.Error("ModSystem.TerrainModule", $"Could not find valid block at {x} , {y}");
+            return false;
+        }
+
+        return block.Metadata.Data.ContainsKey(name);
     }
 
     public bool MoveBlock(int x, int y, int dx, int dy, bool force = false)

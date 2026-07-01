@@ -10,15 +10,17 @@ namespace Flinty.World
 {
     public class Block : Entity
     {
-        public string Type { get; }
+        public string Type { get; set; }
         public BlockEntry? BlockEntry;
         public Terrain Terrain { get; }
 
         public bool CanCollide { get; set; } = true;
-
         private Metadata? _metadata;
-        public Metadata Metadata => _metadata ??= new Metadata(); // lazy loaded metadata for optimization
-
+        public Metadata Metadata
+        {
+            get => _metadata ??= new Metadata();
+            set => _metadata = value;
+        }
         public static readonly Size TileSize = Size.TileSize();
 
         public Block(int x, int y, string type, Terrain terrain)

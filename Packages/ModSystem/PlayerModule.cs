@@ -20,6 +20,7 @@ public class PlayerModule(string moduleName, APIBuilder builder, ModEngine engin
         RegisterFunc("move", nameof(Move));
         RegisterFunc("meta", nameof(Meta));
         RegisterFunc("opt_meta", nameof(OptMeta));
+        RegisterFunc("has_meta", nameof(HasMeta));
 
         // Vararg functions
 
@@ -79,6 +80,11 @@ public class PlayerModule(string moduleName, APIBuilder builder, ModEngine engin
     public object OptMeta(string name, object default_)
     {
         return Engine.Player.Metadata.OptGet(name, default_);
+    }
+
+    public bool HasMeta(string name)
+    {
+        return Engine.Player.Metadata.Data.ContainsKey(name);
     }
 
     public int CursorX(params object[] args)
