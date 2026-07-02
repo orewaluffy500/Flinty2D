@@ -1,6 +1,4 @@
-
-
-using Flinty.ModSystem;
+namespace Flinty.ModSystem;
 
 public class CoreClockModule : ICoreFeature
 {
