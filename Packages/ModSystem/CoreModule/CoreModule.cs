@@ -12,7 +12,8 @@ public class CoreHelperModule : INativeModule
         
         new CoreBlockType(this).Create(); // Create table class for blocks
         new CoreLoggingModule(this).Create(); // Create aliases over NATIVE.out
-        new CoreClockModule(this).Create();
+        new CoreClockModule(this).Create(); // Create clock functions like total_ticks
+        new CorePlayerModule(this).Create(); // Create player methods.
     }
 
     private void CreateConnectMethods()
@@ -53,7 +54,7 @@ public class CoreHelperModule : INativeModule
             return NATIVE.terrain.get_block(x,y) == name
         end
 
-        function {MODULE_NAME}.{table_name}.get_block(x, y)
+        function {MODULE_NAME}.{table_name}.get_block_name(x, y)
             return NATIVE.terrain.get_block(x,y)
         end
         ", $"{MODULE_NAME}_helper_{table_name}");

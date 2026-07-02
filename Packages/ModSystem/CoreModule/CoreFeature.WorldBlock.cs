@@ -24,7 +24,13 @@ class CoreBlockType : ICoreFeature
             if NATIVE.terrain.move(self.x, self.y, dest_x, dest_y, force or false) then
                 self.x = dest_x
                 self.y = dest_y
+                return true
             end
+            return false
+        end
+
+        function WorldBlock:move_by(change_x, change_y, force)
+            return self:move_to(self.x + change_x, self.y + change_y, force)
         end
 
         function WorldBlock:set_type(type_name)
