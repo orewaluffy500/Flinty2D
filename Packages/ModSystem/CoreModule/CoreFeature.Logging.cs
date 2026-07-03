@@ -1,30 +1,47 @@
-namespace Flinty.ModSystem;
+namespace Flinty.ModSystem.CoreFeatures;
 
 
-public class CoreLoggingModule : ICoreFeature
+
+public class CoreFeatureLogging(ModEngine engine, string moduleName) : ICoreFeature(engine, moduleName)
 {
-    public CoreLoggingModule(CoreHelperModule coreHelperModule) : base(coreHelperModule)
+    public override void Build()
     {
+        CreateFeatureTable();
+
+        var moduleLoggingType = typeof(ModuleLogging);
+
+        foreach (var method in moduleLoggingType.GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.DeclaredOnly))
+        {
+            RegisterFunction(method.Name, method);
+        }
     }
 
-    public override void Create()
+
+    public static class ModuleLogging
     {
-        string id = $"{ModEngine.GAME_CORE_MASTER_MODULE_NAME}.logging";
+        public static void leveled(string label, string level, string text)
+        {
+            Console.WriteLine($"MOD [{level}]: {label}: {text}");
+        }
+        public static void info(string label, string text)
+        {
+            leveled(label, "INFO", text);
+        }
 
-        Engine.Lua.DoString(@$"
-            {id} = {{}}
+        public static void error(string label, string text)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            leveled(label, "ERR", text);
+            Console.ResetColor();
+        }
 
-            function {id}.info(msg)
-                NATIVE.out.info(msg)
-            end
-            
-            function {id}.error(label, msg)
-                NATIVE.out.error(label, msg)
-            end
-
-            function {id}.warn(label, msg)
-                NATIVE.out.warning(label, msg)
-            end
-        ", "create_logger_methods");   
+        public static void warn(string label, string text)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            leveled(label, "WARN", text);
+            Console.ResetColor();
+        }
     }
 }
+
+
