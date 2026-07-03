@@ -1,1 +1,0 @@
-core.logging.info("Mod", "Hello")

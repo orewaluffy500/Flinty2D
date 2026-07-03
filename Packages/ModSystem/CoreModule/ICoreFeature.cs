@@ -26,9 +26,20 @@ public abstract class ICoreFeature {
         ModEngine.Lua.NewTable(FullFeaturePath);
     }
 
-    public void RegisterFunction(string name, MethodInfo func)
+    public MethodInfo[] GetStaticMethodsOf(Type type)
     {
-        ModEngine.Lua.RegisterFunction($"{FullFeaturePath}.{name}", this, func);
+        return type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.DeclaredOnly);
+    }
+
+    public MethodInfo[] GetMethodsOf(Type type)
+    {
+        return type.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+    }
+    
+
+    public void RegisterFunction(string name, MethodInfo func, object? inst = null)
+    {
+        ModEngine.Lua.RegisterFunction($"{FullFeaturePath}.{name}", inst ?? this, func);
     }
 
     public abstract void Build();

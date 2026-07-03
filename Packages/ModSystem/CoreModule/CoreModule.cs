@@ -13,5 +13,7 @@ public class CoreHelperModule : INativeModule
     public override void Build()
     {
         new CoreFeatureLogging(Engine, "logging").Build();
+        new CoreFeatureEvents(Engine, "event").Build();
+        new CoreFeatureBlockRegistry(Engine, "block_registry").Build();
     }
 }

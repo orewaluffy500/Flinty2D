@@ -8,9 +8,9 @@ public class CoreFeatureLogging(ModEngine engine, string moduleName) : ICoreFeat
     {
         CreateFeatureTable();
 
-        var moduleLoggingType = typeof(ModuleLogging);
+        var type = typeof(ModuleLogging);
 
-        foreach (var method in moduleLoggingType.GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.DeclaredOnly))
+        foreach (var method in GetStaticMethodsOf(type))
         {
             RegisterFunction(method.Name, method);
         }
