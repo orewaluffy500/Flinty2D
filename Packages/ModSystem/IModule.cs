@@ -4,7 +4,7 @@ using Flinty.World;
 
 namespace Flinty.ModSystem;
 
-public class INativeModule(string moduleName, APIBuilder builder, ModEngine engine)
+public abstract class INativeModule(string moduleName, APIBuilder builder, ModEngine engine)
 {
     public APIBuilder Builder { get; } = builder;
     public ModEngine Engine { get; } = engine;
@@ -12,10 +12,19 @@ public class INativeModule(string moduleName, APIBuilder builder, ModEngine engi
     public Terrain Terrain { get; } = engine.Terrain;
     public string ModuleName { get; protected set; } = moduleName;
 
-    public virtual void Build()
+    public abstract void Initialize();
+
+    public void RegisterObject(string name, Type type, object? instance = null, bool static_ = true)
     {
-        ModuleName = ModEngine.GAME_API_PREFIX + "." + ModuleName;
-        Engine.Lua.NewTable(ModuleName);
+        string fullName = $"{ModEngine.GAME_API_PREFIX}.{name}";
+        Engine.Lua.NewTable(fullName);
+
+        var methods = static_ ? type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.DeclaredOnly) : type.GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Public);
+
+        foreach (var method in methods)
+        {
+            Engine.Lua.RegisterFunction($"{fullName}.{method.Name}", instance ?? this, method);
+        }
     }
 
     public void RegisterFunc(string name, string method)

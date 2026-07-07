@@ -23,8 +23,7 @@ public class ModEngine(Engine engine)
     public List<ScriptMod> Mods { get; } = [];
 
 
-    public static readonly string GAME_API_PREFIX = "NATIVE";
-    public static readonly string GAME_CORE_MASTER_MODULE_NAME = "core";
+    public static readonly string GAME_API_PREFIX = "core";
 
     private int ModIndex { get; set; } = 0;
     public void InitializeSystem()

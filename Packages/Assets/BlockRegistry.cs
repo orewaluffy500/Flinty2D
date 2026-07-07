@@ -1,3 +1,4 @@
+using System.Reflection.Metadata.Ecma335;
 using Raylib_cs;
 
 namespace Flinty.Assets
@@ -25,6 +26,16 @@ namespace Flinty.Assets
         public static BlockEntry? GetBlockEntry(string typeName)
         {
             return Registry.TryGetValue(typeName, out var v) ? v : null;
+        }
+
+        public static string? GetTextureNameOf(string typeName)
+        {
+            return GetBlockEntry(typeName)?.TextureId;
+        }
+
+        public static bool CanBlockCollide(string typeName)
+        {
+            return GetBlockEntry(typeName)?.CanCollide ?? false;
         }
 
         public static void RefreshVisibleRegistry()
