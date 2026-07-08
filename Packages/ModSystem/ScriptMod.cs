@@ -69,7 +69,7 @@ public class ScriptMod
         }
         catch (LuaException e)
         {
-            Logging.LuaError(name, $"{e.Message} {e.InnerException?.Message}");
+            GameLogger.LuaError(name, $"{e.Message} {e.InnerException?.Message}");
         }
 
         return null;

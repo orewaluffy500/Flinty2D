@@ -1,16 +1,28 @@
 using System.Reflection;
 using Flinty.GameSystem;
+using Flinty.Globals;
 using Flinty.World;
 
 namespace Flinty.ModSystem;
 
-public abstract class INativeModule(string moduleName, APIBuilder builder, ModEngine engine)
+public abstract class INativeModule
 {
-    public APIBuilder Builder { get; } = builder;
-    public ModEngine Engine { get; } = engine;
-    public Engine GameEngine { get; } = engine.Engine;
-    public Terrain Terrain { get; } = engine.Terrain;
-    public string ModuleName { get; protected set; } = moduleName;
+    public APIBuilder Builder { get; }
+    public ModEngine Engine { get; }
+    public Engine GameEngine { get; }
+    public Terrain Terrain { get; }
+    public string ModuleName { get; protected set; }
+
+    public INativeModule(string moduleName, APIBuilder builder, ModEngine engine)
+    {
+        Builder = builder;
+        ModuleName = moduleName;
+        Engine = engine;
+        GameEngine = engine.Engine;
+        Terrain = engine.Terrain;
+
+        GameLogger.ModEngineLog("IModule", $"Initialized new module: {ModuleName}.");
+    }
 
     public abstract void Initialize();
 
@@ -25,6 +37,8 @@ public abstract class INativeModule(string moduleName, APIBuilder builder, ModEn
         {
             Engine.Lua.RegisterFunction($"{fullName}.{method.Name}", instance ?? this, method);
         }
+
+        GameLogger.ModEngineLog("IModule", $"Registered {(static_ ? "static" : "instance")} object: {name}");
     }
 
     public void RegisterFunc(string name, string method)

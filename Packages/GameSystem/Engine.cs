@@ -13,6 +13,9 @@ namespace Flinty.GameSystem
         public int Width { get; }
         public int Height { get; }
         public string Caption { get; }
+
+        public int MaximumFPS { get; } = 60;
+
         public Color BackgroundColor { set; get; }
 
         public Terrain Terrain { get; }
@@ -38,17 +41,27 @@ namespace Flinty.GameSystem
             Raylib.SetConfigFlags(ConfigFlags.ResizableWindow);
             Raylib.InitWindow(Width, Height, Caption);
 
+            
+            GameLogger.InfoLog("Game", $"Initialized Window: {_caption} {_w}x{_h}");
+
             // Max FPS
-            Raylib.SetTargetFPS(60);
+            Raylib.SetTargetFPS(MaximumFPS);
+            GameLogger.InfoLog("Game", $"Set maximum FPS to {MaximumFPS}");
 
             // Initialize systems
             EngineRenderer.Init();
+            GameLogger.InfoLog("Game", "Initialized Renderer");
+
             Terrain = new(this);
+            GameLogger.InfoLog("Game", "Initialized Terrain");
+
             Clock = new();
+            GameLogger.InfoLog("Game", "Initialized Clock");
 
             ModEngine = new(this);
             ModEngine.InitializeSystem();
             ModEngine.InitializeModules();
+            GameLogger.InfoLog("Game", "Initialize Mod engine.");
 
             // Block registring
             BlockRegistry.RegisterNew("soil", "Textures/dirt.png", Color.Brown);
@@ -72,6 +85,7 @@ namespace Flinty.GameSystem
             Raylib.SetExitKey(KeyboardKey.Null);
             Terrain.Once();
 
+            ModEngine.RunQueuedMods();
             ModEngine.Callback_Start();
         }
 
@@ -82,6 +96,7 @@ namespace Flinty.GameSystem
             TextureRegistry.UnloadAll();
 
             Raylib.CloseWindow();
+            GameLogger.InfoLog("Game", "Exiting...");
         }
 
         public void Update(float deltaTime)

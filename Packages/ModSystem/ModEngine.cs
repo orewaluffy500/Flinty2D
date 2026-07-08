@@ -19,17 +19,17 @@ public class ModEngine(Engine engine)
     public NLua.Lua Lua { get; } = new();
 
     public Callbacks Callbacks { get; } = new();
- 
-    public List<ScriptMod> Mods { get; } = [];
 
+    public List<ScriptMod> Mods { get; } = [];
+    public List<string> QueuedMods { get; } = [];
 
     public static readonly string GAME_API_PREFIX = "core";
 
     private int ModIndex { get; set; } = 0;
     public void InitializeSystem()
     {
-               
-        Logging.Message("ModSystem", Lua["_VERSION"] is string s ? s : "N/A");
+
+        GameLogger.ModEngineLog("ModSystem", Lua["_VERSION"] is string s ? s : "N/A");
 
         Lua.DoString(@"
         function ___run_mod(filename, env)
@@ -42,41 +42,43 @@ public class ModEngine(Engine engine)
 
     private void RunMod(string filename)
     {
-        ModIndex++;
+        try {
+            ModIndex++;
 
-        string envName = $"env{ModIndex}";
+            string envName = $"env{ModIndex}";
 
-        Lua.NewTable(envName);
-        Lua.DoString($"setmetatable({envName}, {{ __index = _G }} )");
+            Lua.NewTable(envName);
+            Lua.DoString($"setmetatable({envName}, {{ __index = _G }} )");
 
-        Lua.GetFunction("___run_mod")
-        .Call(filename, Lua[envName]);
+            Lua.GetFunction("___run_mod")
+            .Call(filename, Lua[envName]);
 
-        Mods.Add(new(this, envName));
+            Mods.Add(new(this, envName));
+        } catch (LuaException e)
+        {
+            GameLogger.ErrorLog($"Lua Error: {filename}", $"{e.Message}, {e.InnerException?.Message}");
+        }
     }
 
     public void InitializeModules()
     {
-        Lua.DoString(@"
-        function tostr(o)
-            return '' .. o
-        end");
-
         new APIBuilder(this).BuildModules();
     }
     public void LoadScript(string filename)
     {
-        try
-        {
-            RunMod(filename);
-            Logging.Message("ModSystem.ModEngine", $"Succesfully loaded `{filename}`");
-        } catch (LuaException e)
-        {
-            Console.WriteLine(e.Message + " " + e.InnerException?.Message);
-            Console.WriteLine(e.StackTrace);
-        }
+        QueuedMods.Add(filename);
+        GameLogger.ModEngineLog("ModEngine", $"Succesfully loaded `{filename}`");
     }
 
+    public void RunQueuedMods()
+    {
+        foreach (string filename in QueuedMods)
+        {
+            RunMod(filename);
+        }
+
+        GameLogger.ModEngineLog("ModEngine", $"Ran {QueuedMods.Count} queued mods");
+    }
 
 
 
@@ -99,7 +101,7 @@ public class ModEngine(Engine engine)
     {
         Callbacks.Fire("player.moved", ox, oy, nx, ny);
     }
-    
+
     public void Callback_BlockPlaced(int x, int y, string name)
     {
         Callback_Block("placed", name, x, y, name);
@@ -119,7 +121,7 @@ public class ModEngine(Engine engine)
     {
         Callback_Block("random_tick", name, x, y, name);
     }
-    
+
     public bool Callback_BlockBreaking(int x, int y, string name)
     {
         var answers = Callback_Block("breaking", name, x, y, name);

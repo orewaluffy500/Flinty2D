@@ -1,4 +1,5 @@
 using System.Reflection.Metadata.Ecma335;
+using Flinty.Globals;
 using Raylib_cs;
 
 namespace Flinty.Assets
@@ -16,9 +17,18 @@ namespace Flinty.Assets
             if (Registry.ContainsKey(typeName)) return;
 
             TextureRegistry.LoadNew(typeName, "data/" + path);
+
+            var tex = TextureRegistry.GetTexture(typeName);
+            if (tex is null || !Raylib.IsTextureValid((Texture2D)tex))
+            {
+                GameLogger.WarningLog("Block Registry", $"Texture `data/{(path == "" ? "???" : path)}` does not exist.");
+            }
+
             Registry[typeName] = new(fallbackColor, typeName, canCollide);
 
             RefreshVisibleRegistry();
+
+            GameLogger.InfoLog("Block Registry", $"Registered block: {typeName}");
         }
 
 

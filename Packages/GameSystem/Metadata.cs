@@ -11,7 +11,7 @@ public class Metadata
     {
         if (value is null)
         {
-            Logging.Error("GameSystem.Metadata", $"Cannot set {name} to null value.");  
+            GameLogger.ErrorLog("GameSystem.Metadata", $"Cannot set {name} to null value.");  
             return;
         }
 
