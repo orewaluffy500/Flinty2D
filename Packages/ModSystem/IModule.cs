@@ -26,18 +26,29 @@ public abstract class INativeModule
 
     public abstract void Initialize();
 
-    public void RegisterObject(string name, Type type, object? instance = null, bool static_ = true)
+    public void RegisterObject(string name, Type type, object? instance = null)
     {
         string fullName = $"{ModEngine.GAME_API_PREFIX}.{name}";
-        Engine.Lua.NewTable(fullName);
+        Engine.Lua.NewTable(fullName); // Create table for that type
 
-        var methods = static_ ? type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.DeclaredOnly) : type.GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Public);
+        bool static_ = instance is null; // Make it so no instance classes are auto-static
+
+        var flags = BindingFlags.DeclaredOnly | BindingFlags.Public;
+
+        if (static_){ flags |= BindingFlags.Static; } // add static flag when static
+        else { flags |= BindingFlags.Instance; }
+
+        // Get methods
+        var methods = type.GetMethods(flags);
 
         foreach (var method in methods)
         {
+            GameLogger.DebugLog("ModEngine", $"Register function {fullName}.{method.Name}");
+            // Register each function
             Engine.Lua.RegisterFunction($"{fullName}.{method.Name}", instance ?? this, method);
         }
 
+        // Log.
         GameLogger.ModEngineLog("IModule", $"Registered {(static_ ? "static" : "instance")} object: {name}");
     }
 

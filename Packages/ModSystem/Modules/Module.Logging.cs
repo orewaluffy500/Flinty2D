@@ -28,6 +28,13 @@ public class LoggingModule : INativeModule
             Console.ResetColor();
         }
 
+        public static void debug(string label, string text)
+        {
+            Console.ForegroundColor = ConsoleColor.DarkBlue;
+            leveled("debug", label, text);
+            Console.ResetColor();
+        }
+
         public static void warn(string label, string text)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;

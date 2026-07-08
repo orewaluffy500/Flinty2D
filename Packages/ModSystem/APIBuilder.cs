@@ -15,7 +15,19 @@ public class APIBuilder(ModEngine engine)
     {
         ModEngine.Lua.NewTable(ModEngine.GAME_API_PREFIX);
 
-        new LoggingModule("logging", this, ModEngine).Initialize();
-        new BlockRegModule("registry", this, ModEngine).Initialize();
+        INativeModule[] modules =
+        {
+            new LoggingModule("logging", this, ModEngine),
+            new EventsModule("event", this, ModEngine),
+            new BlockRegModule("registry", this, ModEngine),
+            new WorldModule("world", this, ModEngine),
+            new MathModule("math", this, ModEngine),
+        };
+
+        // Initialize the types AFTER declaring the module instances.
+        foreach (INativeModule module in modules)
+        {
+            module.Initialize();
+        }
     }
 }

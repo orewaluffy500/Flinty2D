@@ -15,6 +15,11 @@ public class GameLogger
         LeveledLog("info", label, msg);
     }
 
+    public static void DebugLog(string label, string msg)
+    {
+        LeveledLog("debug", label, msg, ConsoleColor.Blue);
+    }
+
     public static void ModEngineLog(string label, string msg)
     {
         LeveledLog("info", label, msg, ConsoleColor.Cyan);

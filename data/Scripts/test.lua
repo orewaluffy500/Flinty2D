@@ -1,1 +1,0 @@
-core.registry.register("Stone", "", { r = 20, g = 20, b = 20 })

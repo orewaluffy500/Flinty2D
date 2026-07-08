@@ -1,9 +1,8 @@
-using System.Runtime.CompilerServices;
 using Flinty.GameSystem;
 using Flinty.Globals;
 using Flinty.Player;
 using Flinty.World;
-using KeraLua;
+using NLua;
 using NLua.Exceptions;
 
 namespace Flinty.ModSystem;
@@ -16,33 +15,80 @@ public class ModEngine(Engine engine)
     public Clock Clock { get; } = engine.Clock;
     public PlayerEntity Player { get; } = engine.Terrain.Player;
 
-    public NLua.Lua Lua { get; } = new();
+    public Lua Lua { get; } = new();
 
     public Callbacks Callbacks { get; } = new();
 
     public List<ScriptMod> Mods { get; } = [];
     public List<string> QueuedMods { get; } = [];
 
+
+
+    private static readonly HashSet<string> SandboxWhitelist = new()
+    {
+        "assert", "error", "ipairs", "pairs", "next",
+        "pcall", "xpcall", "select", "tonumber", "tostring",
+        "type", "setmetatable", "getmetatable", "rawget", "rawset",
+        "rawequal", "rawlen", "unpack",
+        "string", "table", "math", "core", "___run_mod"
+    };
+
     public static readonly string GAME_API_PREFIX = "core";
 
     private int ModIndex { get; set; } = 0;
     public void InitializeSystem()
     {
-
         GameLogger.ModEngineLog("ModSystem", Lua["_VERSION"] is string s ? s : "N/A");
 
         Lua.DoString(@"
-        function ___run_mod(filename, env)
-            local file, err = loadfile(filename, 't', env)
-            assert(file, err)
-            return file()
+        do
+            local real_loadfile = loadfile
+            function ___run_mod(filename, env)
+                local file, err = real_loadfile(filename, 't', env)
+                assert(file, err)
+                return file()
+            end
         end
         ");
     }
 
+
+    public void HandleWhitelist()
+    {
+        var globals = (LuaTable)Lua["_G"];
+        var keysToRemove = new List<string>();
+
+        // Use Lua-side iteration instead of NLua's DictionaryEntry enumerator
+        Lua.DoString(@"
+        ___globalKeys = {}
+        for k, _ in pairs(_G) do
+            table.insert(___globalKeys, k)
+        end
+        ");
+
+        var keysTable = (LuaTable)Lua["___globalKeys"];
+        foreach (var keyObj in keysTable.Values)
+        {
+            if (keyObj is string key &&
+                !SandboxWhitelist.Contains(key) &&
+                key != "_G" && key != "_VERSION")
+            {
+                keysToRemove.Add(key);
+            }
+        }
+
+        foreach (var key in keysToRemove)
+        {
+            globals[key] = null;
+        }
+
+        Lua.DoString("___globalKeys = nil");
+    }
+
     private void RunMod(string filename)
     {
-        try {
+        try
+        {
             ModIndex++;
 
             string envName = $"env{ModIndex}";
@@ -54,7 +100,8 @@ public class ModEngine(Engine engine)
             .Call(filename, Lua[envName]);
 
             Mods.Add(new(this, envName));
-        } catch (LuaException e)
+        }
+        catch (LuaException e)
         {
             GameLogger.ErrorLog($"Lua Error: {filename}", $"{e.Message}, {e.InnerException?.Message}");
         }
@@ -63,6 +110,8 @@ public class ModEngine(Engine engine)
     public void InitializeModules()
     {
         new APIBuilder(this).BuildModules();
+
+        HandleWhitelist();
     }
     public void LoadScript(string filename)
     {
@@ -126,15 +175,7 @@ public class ModEngine(Engine engine)
     {
         var answers = Callback_Block("breaking", name, x, y, name);
 
-        foreach (var v in answers)
-        {
-            if (v is bool b && !b)
-            {
-                return false;
-            }
-        }
-
-        return true; // prioritize denied
+        return !answers.Contains(false);
     }
 
     private List<object> Callback_Block(string id, string name, params object[] args)
