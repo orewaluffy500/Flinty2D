@@ -19,11 +19,11 @@ public class WorldModule : INativeModule
         {ModEngine.GAME_API_PREFIX}.Block = {{}}
         {ModEngine.GAME_API_PREFIX}.Block.__index = {ModEngine.GAME_API_PREFIX}.Block
 
-        function {ModEngine.GAME_API_PREFIX}.Block.new(x, y, name)
+        function {ModEngine.GAME_API_PREFIX}.{ModuleName}.get_block(x, y)
             local o = setmetatable({{}}, {ModEngine.GAME_API_PREFIX}.Block)
             o.x = x
             o.y = y
-            o.name = name
+            o.name = {ModEngine.GAME_API_PREFIX}.{ModuleName}.get_name_of(x, y)
             return o
         end
         ");
@@ -107,6 +107,6 @@ public class WorldModule : INativeModule
         private static int X(LuaTable o) => Convert.ToInt32(o["x"]);
         private static int Y(LuaTable o) => Convert.ToInt32(o["y"]);
         private static string Name(LuaTable o) => (string) o["name"] ?? "air";
-        private static bool Invalid(LuaTable o) => o["name"] is null;
+        private static bool Invalid(LuaTable o) => o["name"] is null or (object)"air";
     }
 }

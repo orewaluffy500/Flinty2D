@@ -1,15 +1,4 @@
-local function placed(x, y, name)
-    local block = core.Block.new(x, y, name)
-
-    block:set_meta("ishij", true)
-end
-
-
-local function destroyed(x, y, name)
-    local block = core.Block.new(x, y, name)
-
-    core.logging.debug("Mod", block:get_meta("ishij"))
-end
-
-core.event.on_block_event("any", "placed", placed)
-core.event.on_block_event("any", "breaking", destroyed)
+core.event.on_game_event("tick", function ()
+    local pos = core.player.get_pos()
+    core.logging.debug("Mod", pos.x.." "..pos.y)
+end)

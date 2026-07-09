@@ -23,6 +23,7 @@ public class APIBuilder(ModEngine engine)
             new WorldModule("world", this, ModEngine),
             new MathModule("math", this, ModEngine),
             new ClockModule("clock", this, ModEngine),
+            new PlayerModule("player", this, ModEngine),
         };
 
         // Initialize the types AFTER declaring the module instances.

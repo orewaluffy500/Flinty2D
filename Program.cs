@@ -1,10 +1,23 @@
-﻿using Flinty.Assets;
-using Flinty.GameSystem;
+﻿using Flinty.GameSystem;
 using Flinty.Globals;
 using NLua.Exceptions;
 
+// Default window size
+int Width = 1080;
+int Height = 640;
+
+// Default caption
+string Caption = "Flinty Beta";
+
 try {
-    Engine engine = new("Flinty Beta", 1080, 640);
+    // Check if custom width and height are passed
+    if (args.Length > 1)
+    {
+        if (int.TryParse(args[0], out int width)) Width = width;
+        if (int.TryParse(args[1], out int height)) Height = height;
+    }
+
+    Engine engine = new(Caption, Width, Height);
 
     engine.Start();
 
