@@ -45,15 +45,36 @@ public abstract class INativeModule
         {
             GameLogger.DebugLog("ModEngine", $"Register function {fullName}.{method.Name}");
             // Register each function
-            Engine.Lua.RegisterFunction($"{fullName}.{method.Name}", instance ?? this, method);
+            RegisterFuncDirect($"{fullName}.{method.Name}", method, instance);
         }
 
         // Log.
         GameLogger.ModEngineLog("IModule", $"Registered {(static_ ? "static" : "instance")} object: {name}");
     }
 
+    public void RegisterType(string typeName, Type type, object? instance = null)
+    {
+        foreach (var method in type.GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public))
+        {
+            GameLogger.DebugLog("IModule", $"Register function {ModEngine.GAME_API_PREFIX}.{typeName}:{method.Name}");
+            RegisterFuncDirect($"{ModEngine.GAME_API_PREFIX}.{typeName}.{method.Name}", method, instance);
+        }
+
+        GameLogger.ModEngineLog("IModule", $"Registered type: {typeName}");
+    }
+
     public void RegisterFunc(string name, string method)
     {
         Engine.Lua.RegisterFunction($"{ModuleName}.{name}", this, GetType().GetMethod(method));
+    }
+
+    public void RegisterFuncDirect(string path, MethodInfo? method, object? instance = null)
+    {
+        Engine.Lua.RegisterFunction(path, instance ?? this, method);
+    }
+
+    public void RegisterMethod(string name, string oname, Type type, string method, object? instance = null)
+    {
+        RegisterFuncDirect($"{oname}:{name}", type.GetMethod(method), instance);
     }
 }

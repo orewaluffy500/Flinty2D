@@ -22,6 +22,7 @@ public class APIBuilder(ModEngine engine)
             new BlockRegModule("registry", this, ModEngine),
             new WorldModule("world", this, ModEngine),
             new MathModule("math", this, ModEngine),
+            new ClockModule("clock", this, ModEngine),
         };
 
         // Initialize the types AFTER declaring the module instances.

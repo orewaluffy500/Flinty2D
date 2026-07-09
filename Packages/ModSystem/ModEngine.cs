@@ -27,7 +27,7 @@ public class ModEngine(Engine engine)
     private static readonly HashSet<string> SandboxWhitelist = new()
     {
         "assert", "error", "ipairs", "pairs", "next",
-        "pcall", "xpcall", "select", "tonumber", "tostring",
+        "pcall", "xpcall", "print", "select", "tonumber", "tostring",
         "type", "setmetatable", "getmetatable", "rawget", "rawset",
         "rawequal", "rawlen", "unpack",
         "string", "table", "math", "core", "___run_mod"
@@ -91,7 +91,7 @@ public class ModEngine(Engine engine)
         {
             ModIndex++;
 
-            string envName = $"env{ModIndex}";
+            string envName = $"ModEnv_{ModIndex}";
 
             Lua.NewTable(envName);
             Lua.DoString($"setmetatable({envName}, {{ __index = _G }} )");
@@ -103,7 +103,7 @@ public class ModEngine(Engine engine)
         }
         catch (LuaException e)
         {
-            GameLogger.ErrorLog($"Lua Error: {filename}", $"{e.Message}, {e.InnerException?.Message}");
+            GameLogger.ErrorLog($"Lua Error", $"{e}");
         }
     }
 

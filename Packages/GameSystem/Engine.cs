@@ -25,6 +25,10 @@ namespace Flinty.GameSystem
         public ModEngine ModEngine { get; }
 
 
+        public static readonly Color BACKGROUND_CLASSIC = new(20, 20, 40);
+        public static readonly Color BACKGROUND_COSMIC = new(16, 10, 28);
+        public static readonly Color BACKGROUND_NATURAL = new(10, 31, 20);
+
 
         public Engine(string _caption, int _w, int _h)
         {
@@ -32,7 +36,7 @@ namespace Flinty.GameSystem
             Width = _w;
             Height = _h;
             Caption = _caption;
-            BackgroundColor = new(20, 20, 40);
+            BackgroundColor = BACKGROUND_NATURAL;
 
 
             // Initialize window
@@ -41,24 +45,30 @@ namespace Flinty.GameSystem
             Raylib.SetConfigFlags(ConfigFlags.ResizableWindow);
             Raylib.InitWindow(Width, Height, Caption);
 
-            
+
             GameLogger.InfoLog("Game", $"Initialized Window: {_caption} {_w}x{_h}");
 
             // Max FPS
             Raylib.SetTargetFPS(MaximumFPS);
             GameLogger.InfoLog("Game", $"Set maximum FPS to {MaximumFPS}");
-
-            // Initialize systems
-            EngineRenderer.Init();
-            GameLogger.InfoLog("Game", "Initialized Renderer");
-
+            
             Terrain = new(this);
             GameLogger.InfoLog("Game", "Initialized Terrain");
 
             Clock = new();
             GameLogger.InfoLog("Game", "Initialized Clock");
-
+            
             ModEngine = new(this);
+
+            InitializeAll();
+        }
+
+        private void InitializeAll()
+        {
+            // Initialize systems
+            EngineRenderer.Init();
+            GameLogger.InfoLog("Game", "Initialized Renderer");
+
             ModEngine.InitializeSystem();
             ModEngine.InitializeModules();
             GameLogger.InfoLog("Game", "Initialize Mod engine.");
@@ -68,7 +78,7 @@ namespace Flinty.GameSystem
             BlockRegistry.RegisterNew("rock", "Textures/rock.png", new(80, 80, 80));
 
             // Load Scripts
-            
+
             string modFolder = "data/Scripts";
 
             if (!Directory.Exists(modFolder)) Directory.CreateDirectory(modFolder);
@@ -77,7 +87,6 @@ namespace Flinty.GameSystem
             {
                 ModEngine.LoadScript(file);
             }
-
         }
 
         public void PreGameLoop()

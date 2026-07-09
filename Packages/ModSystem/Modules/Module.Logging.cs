@@ -16,26 +16,26 @@ public class LoggingModule : INativeModule
 
     public class InnerModule
     {
-        public static void leveled(string level, string label, string text) => Console.WriteLine($"Mod [{level.ToUpper()}]: {label}: {text}");
+        public static void leveled(string level, string label, object text) => Console.WriteLine($"Mod [{level.ToUpper()}]: {label}: {text}");
 
 
-        public static void log(string label, string text) => leveled("log", label, text);
+        public static void log(string label, object text) => leveled("log", label, text);
 
-        public static void error(string label, string text)
+        public static void error(string label, object text)
         {
             Console.ForegroundColor = ConsoleColor.Red;
             leveled("error", label, text);
             Console.ResetColor();
         }
 
-        public static void debug(string label, string text)
+        public static void debug(string label, object text)
         {
             Console.ForegroundColor = ConsoleColor.DarkBlue;
             leveled("debug", label, text);
             Console.ResetColor();
         }
 
-        public static void warn(string label, string text)
+        public static void warn(string label, object text)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
             leveled("warn", label, text);

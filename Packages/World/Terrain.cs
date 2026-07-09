@@ -204,5 +204,11 @@ namespace Flinty.World
 
             return block.CanCollide;
         }
+
+
+        public bool CanBlocksTick()
+        {
+            return Engine.Clock.IsTicking && !TicksFrozen;
+        }
     }
 }

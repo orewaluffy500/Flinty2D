@@ -4,7 +4,7 @@ using Flinty.Globals;
 using NLua.Exceptions;
 
 try {
-    Engine engine = new("Flinty Beta", 1080, 720);
+    Engine engine = new("Flinty Beta", 1080, 640);
 
     engine.Start();
 
