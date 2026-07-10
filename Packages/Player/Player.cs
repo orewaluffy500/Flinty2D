@@ -73,7 +73,7 @@ namespace Flinty.Player
             if (!Velocity.IsZero())
             {
                 StepDelay = Preferences.STEP_DELAY;
-                Terrain.Engine.ModEngine.Callback_PlayerMove(Pos.X, Pos.Y, Pos.X + Velocity.X, Pos.Y + Velocity.Y);
+                Terrain.Engine.FirePlayerEvent("moved", Pos.X, Pos.Y, Pos.X + Velocity.X, Pos.Y + Velocity.Y);
             }
 
 
@@ -90,7 +90,13 @@ namespace Flinty.Player
         {
             if (KeyMap.KeyPressed("CycleBlocks")) // CycleBlocks is by default an alias for Tab
             {
+                var old_selection = Inventory.GetSelection();
+
                 Inventory.AdvanceSelection();
+                
+                var new_selection = Inventory.GetSelection();
+
+                Terrain.Engine.FirePlayerEvent("reselected", old_selection, new_selection);
             }
         }
 

@@ -129,61 +129,7 @@ public class ModEngine(Engine engine)
         GameLogger.ModEngineLog("ModEngine", $"Ran {QueuedMods.Count} queued mods");
     }
 
+    // BASE CALLBACK FIRERS
+    public List<object> FireCallback(string id, params object[] args) => Callbacks.Fire(id, args);
 
-
-    public void Callback_Start()
-    {
-        Callbacks.Fire("game.start");
-    }
-
-    public void Callback_Tick()
-    {
-        Callbacks.Fire("game.tick");
-    }
-
-    public void Callback_End()
-    {
-        Callbacks.Fire("game.end");
-    }
-
-    public void Callback_PlayerMove(int ox, int oy, int nx, int ny)
-    {
-        Callbacks.Fire("player.moved", ox, oy, nx, ny);
-    }
-
-    public void Callback_BlockPlaced(int x, int y, string name)
-    {
-        Callback_Block("placed", name, x, y, name);
-    }
-
-    public void Callback_BlockUpdated(int mx, int my, string mname, int x, int y, string name) // Called when a block is placed in a 3x3 area of another block, mx and stuff are the block that triggered it and the normal ones are the block that got triggered
-    {
-        Callback_Block("updated", name, mx, my, mname, x, y, name);
-    }
-
-    public void Callback_BlockTick(int x, int y, string name)
-    {
-        Callback_Block("tick", name, x, y, name);
-    }
-
-    public void Callback_BlockRandomTick(int x, int y, string name)
-    {
-        Callback_Block("random_tick", name, x, y, name);
-    }
-
-    public bool Callback_BlockBreaking(int x, int y, string name)
-    {
-        var answers = Callback_Block("breaking", name, x, y, name);
-
-        return !answers.Contains(false);
-    }
-
-    private List<object> Callback_Block(string id, string name, params object[] args)
-    {
-        var result = Callbacks.Fire($"block.any.{id}", args);
-        var result2 = Callbacks.Fire($"block.{name}.{id}", args);
-
-        result.AddRange(result2);
-        return result;
-    }
 }

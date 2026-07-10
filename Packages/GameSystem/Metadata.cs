@@ -7,15 +7,10 @@ public class Metadata
 {
     public Dictionary<string, object> Data { get; private set; } = new();
 
-    public void Set(string name, object? value)
+    public object? Set(string name, object value)
     {
-        if (value is null)
-        {
-            GameLogger.ErrorLog("GameSystem.Metadata", $"Cannot set {name} to null value.");  
-            return;
-        }
-
         Data[name] = value;
+        return value;
     }
 
     public object? Get(string name)

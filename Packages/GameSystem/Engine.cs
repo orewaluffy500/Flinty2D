@@ -51,13 +51,13 @@ namespace Flinty.GameSystem
             // Max FPS
             Raylib.SetTargetFPS(MaximumFPS);
             GameLogger.InfoLog("Game", $"Set maximum FPS to {MaximumFPS}");
-            
+
             Terrain = new(this);
             GameLogger.InfoLog("Game", "Initialized Terrain");
 
-            Clock = new();
+            Clock = new(this);
             GameLogger.InfoLog("Game", "Initialized Clock");
-            
+
             ModEngine = new(this);
 
             InitializeAll();
@@ -95,12 +95,13 @@ namespace Flinty.GameSystem
             Terrain.Once();
 
             ModEngine.RunQueuedMods();
-            ModEngine.Callback_Start();
+           
+            FireGameEvent("start");
         }
 
         public void PostGameLoop()
         {
-            ModEngine.Callback_End();
+            FireGameEvent("end");
             Terrain.Final();
             TextureRegistry.UnloadAll();
 
@@ -113,11 +114,6 @@ namespace Flinty.GameSystem
             Clock.Update(deltaTime);
 
             Terrain.Update(deltaTime);
-
-            if (Clock.IsTicking)
-            {
-                ModEngine.Callback_Tick();
-            }
         }
 
         public void Draw()
@@ -130,7 +126,7 @@ namespace Flinty.GameSystem
             PreGameLoop();
 
             while (!Raylib.WindowShouldClose())
-            {   
+            {
                 // Update
                 Update(Raylib.GetFrameTime());
 
@@ -146,6 +142,38 @@ namespace Flinty.GameSystem
 
             PostGameLoop();
         }
-    }
 
+
+
+
+
+
+
+
+
+
+        public List<object> FireGameEvent(string name, params object[] args)
+        {
+            return ModEngine.FireCallback($"{EventCategories.GLOBAL_GAME_EVENTS}.{name}", args);
+        }
+
+        public List<object> FirePlayerEvent(string name, params object[] args)
+        {
+            return ModEngine.FireCallback($"{EventCategories.PLAYER_EVENTS}.{name}", args);
+        }
+
+        public List<object> FireClockEvent(string name, params object[] args)
+        {
+            return ModEngine.FireCallback($"{EventCategories.CLOCK_EVENTS}.{name}", args);
+        }
+        
+        public List<object> FireBlockEvent(string event_name, string block_type, params object[] args)
+        {
+            var results_for_all = ModEngine.FireCallback($"{EventCategories.BLOCK_EVENTS}.{EventCategories.ALL_BLOCKS}.{block_type}", args);
+            var results_for_exclusive = ModEngine.FireCallback($"{EventCategories.BLOCK_EVENTS}.{event_name}.{block_type}", args);
+
+            return new(results_for_all.Concat(results_for_exclusive)); // Combine both results
+        }
+        
+    }
 }

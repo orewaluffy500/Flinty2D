@@ -1,6 +1,7 @@
 using Flinty.Assets;
 using Flinty.GameMath;
 using Flinty.GameSystem;
+using Flinty.Globals;
 using Flinty.Player;
 using Raylib_cs;
 
@@ -86,7 +87,8 @@ namespace Flinty.World
             chunk.SetBlock(localBlockPos.X, localBlockPos.Y, new Block(x, y, typeName, this));
 
             // Call script event
-            Engine.ModEngine.Callback_BlockPlaced(x, y, typeName);
+            Engine.FireBlockEvent("placed", typeName, x, y);
+
             if (!raw) UpdateBlocks(x, y, typeName);
             
             return true;
@@ -103,7 +105,7 @@ namespace Flinty.World
                     GetBlockEx(x + j, y + i, out Pos _pos, out Chunk _c, out Block? tmp);
                     if (tmp != null)
                     {
-                        Engine.ModEngine.Callback_BlockUpdated(x, y, typeName, x + j, y + i, tmp.Type);
+                        Engine.FireBlockEvent("updated", tmp.Type, x, y, x + j, y + i);
                     }
                 }
             }
@@ -116,9 +118,14 @@ namespace Flinty.World
             if (block == null) return false;
 
             // Handle script event
-            bool continue_ = Engine.ModEngine.Callback_BlockBreaking(x, y, block.Type);
+            var answers = Engine.FireBlockEvent("can_break", block.Type);
 
-            if (continue_ == false) return false; // Must use explicit check to ensure both nil and true mean continue (for sake of simplicity    )
+            foreach (var o in answers)
+            {
+                GameLogger.DebugLog("Breaking block " + block.Type, o?.ToString() ?? "n/a");
+            }
+
+            if (answers.Contains(false)) return false;
 
             chunk.ClearBlock(localBlockPos.X, localBlockPos.Y);
             UpdateBlocks(x, y, block.Type);

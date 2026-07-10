@@ -1,4 +1,5 @@
 
+using Flinty.Globals;
 using Flinty.World;
 using NLua;
 
@@ -27,12 +28,22 @@ public class EventsModule : INativeModule
 
         public void on_game_event(string event_name, LuaFunction function)
         {
-            on($"game.{event_name}", function);
+            on($"{EventCategories.GLOBAL_GAME_EVENTS}.{event_name}", function);
         }
 
         public void on_block_event(string block_name, string event_name, LuaFunction function)
         {
-            on($"block.{block_name}.{event_name}", function);
+            on($"{EventCategories.BLOCK_EVENTS}.{block_name}.{event_name}", function);
+        }
+
+        public void on_player_event(string event_name, LuaFunction function)
+        {
+            on($"{EventCategories.PLAYER_EVENTS}.{event_name}", function);
+        }
+
+        public void on_clock_event(string event_name, LuaFunction function)
+        {
+            on($"{EventCategories.CLOCK_EVENTS}.{event_name}", function);
         }
     }
 }

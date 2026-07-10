@@ -93,7 +93,7 @@ public class WorldModule : INativeModule
             return block is null ? def : block.Metadata.OptGet(key, def);
         }
 
-        public object? set_meta(LuaTable o, string key, object? value)
+        public object? set_meta(LuaTable o, string key, object value)
         {
             if (Invalid(o)) return null;
             

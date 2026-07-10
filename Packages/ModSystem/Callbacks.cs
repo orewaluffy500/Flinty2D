@@ -29,7 +29,16 @@ public class Callbacks
         foreach (var callback in callbacks.TryGetValue(id, out var v) ? v : [])
         {
             if (callback is null) continue;
-            results.Add(callback.Call(args));
+            
+            var tmp_result = callback.Call(args);
+
+            if (tmp_result is object[] arr)
+            {
+                results.AddRange(arr);
+            } else
+            {
+                results.Add(tmp_result);
+            }
         }
 
         return results;

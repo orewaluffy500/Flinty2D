@@ -62,7 +62,7 @@ namespace Flinty.World
             foreach (Block? block in blocks){
                 if (block != null)
                 {
-                    terrain.Engine.ModEngine.Callback_BlockRandomTick(block.Pos.X, block.Pos.Y, block.Type);
+                    terrain.Engine.FireBlockEvent("random_tick", block.Type, block.Pos.X, block.Pos.Y);
                 }
             }
         }
