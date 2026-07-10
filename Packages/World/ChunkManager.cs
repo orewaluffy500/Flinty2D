@@ -51,7 +51,7 @@ public class ChunkManager(Terrain t)
 
                 if (Terrain.CanBlocksTick())
                 {
-                    Terrain.Engine.FireBlockEvent("tick", block.Type, block.Pos.X, block.Pos.Y, block.Type);
+                    Terrain.Engine.FireBlockEvent("tick", block.Type, Terrain.Engine.Clock.TickIndex, block.Pos.X, block.Pos.Y);
                 }
 
                 block.Draw();
