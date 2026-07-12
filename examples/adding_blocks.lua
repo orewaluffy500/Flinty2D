@@ -30,4 +30,14 @@ core.registry.register("my_mod:my_png_block", "path/to/texture", {
 -- The path of the texture begins at `game directory/data`
 -- So if you write `Textures/some_block.png` it's full path is effectively `game directory/data/Textures/some_block.png`
 
+-- Checking if a block type can collide
+core.register.can_collide("my_mod:my_block")
+
+-- Checking if a block type is registered
+core.registry.is_registered("my_mod:my_block")
+
+-- Getting the texture path of a block type
+core.registry.get_texture("my_mod:my_bloc")
+
+
 -- Now go to `block_features.lua`

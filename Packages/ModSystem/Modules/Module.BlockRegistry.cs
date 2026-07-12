@@ -30,8 +30,8 @@ public class BlockRegModule : INativeModule
             BlockRegistry.RegisterNew(id, texName, new(red, green, blue, alpha), canCollide);
         }
 
-        public static bool is_registered(string id) => BlockRegistry.IsRegistered(id);
-        public static bool can_collide(string id) => BlockRegistry.CanBlockCollide(id);
+        public static bool is_registered(string id)  => BlockRegistry.IsRegistered(id);
+        public static bool can_collide(string id)    => BlockRegistry.CanBlockCollide(id);
         public static string? get_texture(string id) => BlockRegistry.GetTextureNameOf(id);
     }
 }

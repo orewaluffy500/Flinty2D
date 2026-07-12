@@ -29,7 +29,7 @@ public class PlayerModule : INativeModule
         // VELOCITY
         public void move_by(int mx, int my)
         {
-            terrain.Player.Velocity.Change(mx, my);
+            terrain.Player.Velocity.Change(mx, my, true);
         }
 
         // TELEPORT
