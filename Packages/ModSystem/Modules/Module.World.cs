@@ -70,12 +70,21 @@ public class WorldModule : INativeModule
             return terrain.Break(X(o), Y(o));
         }
 
-        public bool duplicate(LuaTable o, int ox, int oy, bool replace = false)
+        public bool duplicate(LuaTable o, int dest_x, int dest_y, bool replace = false)
         {
             if (Invalid(o)) return false;
 
-            return terrain.Place(X(o), Y(o), Name(o), replace);
+            return terrain.Place(dest_x, dest_y, Name(o), replace);
         }
+
+        public bool move(LuaTable o, int dest_x, int dest_y, bool force = false)
+        {
+            if (Invalid(o)) return false;
+
+            return terrain.Move(X(o), Y(o), dest_x, dest_y, force);
+        }
+
+
 
         public object? get_meta(LuaTable o, string key)
         {

@@ -12,7 +12,7 @@ namespace Flinty.Assets
 
 
         // Only add new block
-        public static void RegisterNew(string typeName, string path, Color fallbackColor, bool canCollide = true)
+        public static void RegisterNew(string typeName, string path, Color fallbackColor, bool canCollide = true, bool hidden = false)
         {
             if (Registry.ContainsKey(typeName)) return;
 
@@ -21,32 +21,23 @@ namespace Flinty.Assets
             var tex = TextureRegistry.GetTexture(typeName);
             if (tex is null || !Raylib.IsTextureValid((Texture2D)tex))
             {
-                GameLogger.WarningLog("Block Registry", $"Texture `data/{(path == "" ? "???" : path)}` does not exist.");
+                GameLogger.WarningLog("Block Registry", $"Texture `data/{(path == "" ? "?" : path)}` does not exist.");
             }
 
-            Registry[typeName] = new(fallbackColor, typeName, canCollide);
+            Registry[typeName] = new(fallbackColor, typeName, canCollide, hidden);
 
             RefreshVisibleRegistry();
 
-            GameLogger.InfoLog("Block Registry", $"Registered block: {typeName}");
+            GameLogger.InfoLog("Block Registry", $"Registered {(hidden ? "hidden block" : "block")}: {typeName}");
         }
 
 
         // (nullable) Get registered entry
-        public static BlockEntry? GetBlockEntry(string typeName)
-        {
-            return Registry.TryGetValue(typeName, out var v) ? v : null;
-        }
+        public static BlockEntry? GetBlockEntry(string typeName) => Registry.TryGetValue(typeName, out var v) ? v : null;
+        public static string? GetTextureNameOf(string typeName) => GetBlockEntry(typeName)?.TextureId;
+        public static bool CanBlockCollide(string typeName) => GetBlockEntry(typeName)?.CanCollide ?? false;
+        public static bool IsHidden(string typeName) => Registry.ContainsKey(typeName) && !VisibleRegistry.Contains(typeName);
 
-        public static string? GetTextureNameOf(string typeName)
-        {
-            return GetBlockEntry(typeName)?.TextureId;
-        }
-
-        public static bool CanBlockCollide(string typeName)
-        {
-            return GetBlockEntry(typeName)?.CanCollide ?? false;
-        }
 
         public static void RefreshVisibleRegistry()
         {
@@ -54,7 +45,7 @@ namespace Flinty.Assets
 
             foreach (var pair in Registry)
             {
-                if (!pair.Key.StartsWith("hid "))
+                if (!pair.Value.Hidden)
                 {
                     VisibleRegistry.Add(pair.Key);
                 }
@@ -69,10 +60,11 @@ namespace Flinty.Assets
 
 
 
-    public class BlockEntry(Color fallbackColor, string textureId, bool canCollide = true)
+    public class BlockEntry(Color fallbackColor, string textureId, bool canCollide = true, bool hidden = false)
     {
         public Color FallbackColor { get; set; } = fallbackColor;
         public string TextureId { get; private set; } = textureId;
         public bool CanCollide { get; } = canCollide;
+        public bool Hidden { get; } = hidden;
     }
 }

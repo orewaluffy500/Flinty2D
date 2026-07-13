@@ -27,8 +27,13 @@ local function block_placed(block_x, block_y)
 
     -- That's all for meta, Now for the other features of the block object
 
-    block_object:duplicate(4, 2) -- Duplicate this block to the destination
+    block_object:duplicate(4, 2, false) -- Duplicate this block to the destination
+    -- The `false` is optional it's simply to specify whether to replace existing blocks
     -- Sidenote: Duplication only copies the type NOT the metadata or other values
+
+    -- You can also move blocks
+    block_object:move(3, 8, false) -- Move to 3, 8 (WITH METADATA)
+    -- The `false` is optional it's simply to specify whether to replace existing blocks
 
     if block_object:same_as('soil') then -- Simply a helper over `block.name == target`
         core.logging.debug("My Mod", "Block is soil!")

@@ -172,7 +172,7 @@ namespace Flinty.GameSystem
             var results_for_all = ModEngine.FireCallback($"{EventCategories.BLOCK_EVENTS}.{EventCategories.ALL_BLOCKS}.{block_type}", args);
             var results_for_exclusive = ModEngine.FireCallback($"{EventCategories.BLOCK_EVENTS}.{event_name}.{block_type}", args);
 
-            return new(results_for_all.Concat(results_for_exclusive)); // Combine both results
+            return [.. results_for_all.Concat(results_for_exclusive)]; // Combine both results
         }
         
     }
