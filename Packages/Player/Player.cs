@@ -8,7 +8,7 @@ using Raylib_cs;
 
 namespace Flinty.Player
 {
-    public class PlayerEntity : Entity
+    public class PlayerEntity : TweenedEntity
     {
         public Point Velocity { get; private set; } = Point.Zero();
 
@@ -35,6 +35,8 @@ namespace Flinty.Player
 
         public override void Update(float deltaTime)
         {
+            base.Update(deltaTime);
+
             UpdateMovement(deltaTime);
             HandleBlockCycle();
             HandleMisc();
@@ -83,6 +85,7 @@ namespace Flinty.Player
             if (Terrain.IsSolidBlock(Pos.X, Pos.Y + Velocity.Y)) Velocity.Y = 0;
 
             Pos.Change(Velocity.X, Velocity.Y, true); // Inline means no new instances
+
             Velocity.SetZero();
         }
 
@@ -125,7 +128,7 @@ namespace Flinty.Player
         public override void Draw()
         {
             Cursor.Draw(); // Draw cursor
-            EngineRenderer.Rectangle(new(Pos.Mul(Preferences.TILE_SIZE), Area.TileSize()), new(123, 123, 255)); // Draw player
+            EngineRenderer.Rectangle(new(VisualPos.Mul(Preferences.TILE_SIZE), Area.TileSize()), new(123, 123, 255)); // Draw player
         }
 
 

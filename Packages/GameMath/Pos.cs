@@ -138,6 +138,21 @@ namespace Flinty.GameMath
     {
         public new float X { get; set; }
         public new float Y { get; set; }
+
+        public static new PointF Zero() => new(0, 0);
+        public static new PointF One() => new(1, 1);
+
+        public static bool NearlyEqual(float a, float b, float tolerance = 0.0001f) => Math.Abs(a - b) < tolerance;
+        public bool NearlyEqual(PointF other, float tolerance = 0.0001f) => NearlyEqual(X, other.X, tolerance) && NearlyEqual(Y, other.Y, tolerance);
+        public bool NearlyEqual(Point other, float tolerance = 0.0001f) => NearlyEqual(X, other.X, tolerance) && NearlyEqual(Y, other.Y, tolerance);
+
+        public static float Lerp(float a, float b, float t) => a + (b - a) * t;
+
+        public void LerpInplace(float x, float y, float t)
+        {
+            X = Lerp(X, x, t);
+            Y = Lerp(Y, y, t);
+        }
     }
 
 
