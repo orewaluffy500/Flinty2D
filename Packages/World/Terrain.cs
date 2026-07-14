@@ -12,7 +12,7 @@ namespace Flinty.World
         public Engine Engine { get; set; }
         public ChunkManager ChunkManager { get; }
 
-        public PlayerEntity Player { get; }
+        public PlayerNode Player { get; }
 
         public bool TicksFrozen { get; set; } = false;
 
@@ -59,13 +59,13 @@ namespace Flinty.World
         public bool Move(int x, int y, int dx, int dy, bool force = false)
         {
             // Get the two blocks
-            GetBlockEx(x, y, out Point localBlockPos1, out Chunk chunk1, out Block? block1);
-            GetBlockEx(dx, dy, out Point localBlockPos2, out Chunk chunk2, out Block? block2);
+            GetBlockEx(x, y, out Coordinates localBlockPos1, out Chunk chunk1, out TileNode? block1);
+            GetBlockEx(dx, dy, out Coordinates localBlockPos2, out Chunk chunk2, out TileNode? block2);
 
             if (block1 == null) return false; // Abort if target is null
             if (block2 != null && !force) return false; // Abort if destination exists and force isn't applied
 
-            block1?.Pos.Set(dx, dy); // Obviously not null but just for the sake of perfectionism we use ?.
+            block1?.Coords.Set(dx, dy); // Obviously not null but just for the sake of perfectionism we use ?.
 
             chunk2.SetBlock(localBlockPos2.X, localBlockPos2.Y, block1); // Move the target to the destination
             chunk1.ClearBlock(localBlockPos1.X, localBlockPos1.Y); // Clear the old location
@@ -78,13 +78,13 @@ namespace Flinty.World
         {
             if (!BlockRegistry.IsRegistered(typeName)) return false;
 
-            GetBlockEx(x, y, out Point localBlockPos, out Chunk chunk, out Block? block);
+            GetBlockEx(x, y, out Coordinates localBlockPos, out Chunk chunk, out TileNode? block);
 
             // Exit if the block already exists and we can't replace it.
             if (block != null && !replace) return false;
 
             // Set block
-            chunk.SetBlock(localBlockPos.X, localBlockPos.Y, new Block(x, y, typeName, this));
+            chunk.SetBlock(localBlockPos.X, localBlockPos.Y, new TileNode(x, y, typeName, this));
 
             // Call script event
             Engine.FireBlockEvent("placed", typeName, x, y);
@@ -102,10 +102,10 @@ namespace Flinty.World
                 {
                     if (i == 0 && j == 0) continue;
 
-                    GetBlockEx(x + j, y + i, out Point _pos, out Chunk _c, out Block? tmp);
+                    GetBlockEx(x + j, y + i, out Coordinates _pos, out Chunk _c, out TileNode? tmp);
                     if (tmp != null)
                     {
-                        Engine.FireBlockEvent("updated", tmp.Type, x, y, x + j, y + i);
+                        Engine.FireBlockEvent("updated", tmp.BlockId, x, y, x + j, y + i);
                     }
                 }
             }
@@ -113,22 +113,22 @@ namespace Flinty.World
 
         public bool Break(int x, int y)
         {
-            GetBlockEx(x, y, out Point localBlockPos, out Chunk chunk, out Block? block);
+            GetBlockEx(x, y, out Coordinates localBlockPos, out Chunk chunk, out TileNode? block);
 
             if (block == null) return false;
 
             // Handle script event
-            var answers = Engine.FireBlockEvent("can_break", block.Type);
+            var answers = Engine.FireBlockEvent("can_break", block.BlockId);
 
             foreach (var o in answers)
             {
-                GameLogger.DebugLog("Breaking block " + block.Type, o?.ToString() ?? "n/a");
+                GameLogger.DebugLog("Breaking block " + block.BlockId, o?.ToString() ?? "n/a");
             }
 
             if (answers.Contains(false)) return false;
 
             chunk.ClearBlock(localBlockPos.X, localBlockPos.Y);
-            UpdateBlocks(x, y, block.Type);
+            UpdateBlocks(x, y, block.BlockId);
 
             return true;
         }
@@ -147,13 +147,13 @@ namespace Flinty.World
             }
         }
 
-        private void GetBlockEx(int x, int y, out Point localBlockPos, out Chunk chunk, out Block? block)
+        private void GetBlockEx(int x, int y, out Coordinates localBlockPos, out Chunk chunk, out TileNode? block)
         {
             // Retrieve chunk position
-            Point chunkPos = ChunkHelpers.Block2Chunk(x, y);
+            Coordinates chunkPos = ChunkHelpers.Node2ChunkCoord(x, y);
 
             // Retrieve block position local to chunk
-            localBlockPos = ChunkHelpers.Block2Local(x, y);
+            localBlockPos = ChunkHelpers.Node2LocalCoord(x, y);
 
             // Get chunk (Lazy-loaded)
             chunk = ChunkManager.GetChunkSafe(chunkPos.X, chunkPos.Y);
@@ -164,38 +164,38 @@ namespace Flinty.World
 
         public void SetBlock(int x, int y, string name)
         {
-            GetBlockEx(x, y, out Point localBlockPos, out Chunk chunk, out Block? alreadyThere);
+            GetBlockEx(x, y, out Coordinates localBlockPos, out Chunk chunk, out TileNode? alreadyThere);
 
             if (alreadyThere != null) {
-                alreadyThere.Type = name;
-                alreadyThere.BlockEntry = BlockRegistry.GetBlockEntry(name);
+                alreadyThere.BlockId = name;
+                alreadyThere.BlockRegistryEntry = BlockRegistry.GetBlockEntry(name);
             }
             else
             {
-                chunk.SetBlock(x, y, new Block(x, y, name, this));
+                chunk.SetBlock(x, y, new TileNode(x, y, name, this));
             }
         }
 
-        public Block? GetBlock(int x, int y)
+        public TileNode? GetBlock(int x, int y)
         {
             // Retrieve chunk position
-            Point chunkPos = ChunkHelpers.Block2Chunk(x, y);
+            Coordinates chunkPos = ChunkHelpers.Node2ChunkCoord(x, y);
 
             // Retrieve block position local to chunk
-            Point localBlockPos = ChunkHelpers.Block2Local(x, y);
+            Coordinates localBlockPos = ChunkHelpers.Node2LocalCoord(x, y);
 
             // Get chunk (Lazy-loaded)
             Chunk chunk = ChunkManager.GetChunkSafe(chunkPos.X, chunkPos.Y);
 
             // Get nullable block
-            Block? block = chunk.GetBlock(localBlockPos.X, localBlockPos.Y);
+            TileNode? block = chunk.GetBlock(localBlockPos.X, localBlockPos.Y);
 
             return block;
         }
 
         public string GetBlockName(int x, int y)
         {
-            return GetBlock(x, y)?.Type ?? "air"; // Return block type or air
+            return GetBlock(x, y)?.BlockId ?? "air"; // Return block type or air
         }
 
         public bool IsBlock(int x, int y)

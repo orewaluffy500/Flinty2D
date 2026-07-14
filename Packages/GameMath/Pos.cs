@@ -1,21 +1,22 @@
 using System.Numerics;
 using Flinty.Globals;
+using Raylib_cs;
 
 namespace Flinty.GameMath
 {
-    public class Point(int x, int y)
+    public class Coordinates(int x, int y)
     {
         public int X { get; set; } = x;
         public int Y { get; set; } = y;
 
-        public static Point Zero()
+        public static Coordinates Zero()
         {
-            return new Point(0, 0);
+            return new Coordinates(0, 0);
         }
 
-        public static Point One()
+        public static Coordinates One()
         {
-            return new Point(1, 1);
+            return new Coordinates(1, 1);
         }
 
         public Vector2 ToVector()
@@ -23,33 +24,33 @@ namespace Flinty.GameMath
             return new Vector2(X, Y);
         }
 
-        public static Point From(int v)
+        public static Coordinates From(int v)
         {
-            return new Point(v, v);
+            return new Coordinates(v, v);
         }
 
-        public static Point FromGrid(int x, int y)
+        public static Coordinates FromGrid(int x, int y)
         {
-            return new Point(x, y).Mul(Preferences.TILE_SIZE);
+            return new Coordinates(x, y).Mul(Preferences.TILE_SIZE);
         }
 
-        public Point Change(int v, bool inline = false)
+        public Coordinates Change(int v, bool inline = false)
         {
             return Change(v, v, inline);
         }
 
-        public Point Mul(int v, bool inline = false)
+        public Coordinates Mul(int v, bool inline = false)
         {
             return Mul(v, v, inline);
         }
 
-        public Point Div(int v, bool inline = false)
+        public Coordinates Div(int v, bool inline = false)
         {
             return Div(v, v, inline);
         }
 
 
-        public Point Change(int v, int v2, bool inline = false)
+        public Coordinates Change(int v, int v2, bool inline = false)
         {
             if (inline)
             {
@@ -58,10 +59,10 @@ namespace Flinty.GameMath
                 return Zero();
             }
 
-            return new Point(X + v, Y + v2);
+            return new Coordinates(X + v, Y + v2);
         }
 
-        public Point Mul(int v, int v2, bool inline = false)
+        public Coordinates Mul(int v, int v2, bool inline = false)
         {
             if (inline)
             {
@@ -70,10 +71,10 @@ namespace Flinty.GameMath
                 return Zero();
             }
 
-            return new Point(X * v, Y * v2);
+            return new Coordinates(X * v, Y * v2);
         }
 
-        public Point Div(int v, int v2, bool inline = false)
+        public Coordinates Div(int v, int v2, bool inline = false)
         {
             if (inline)
             {
@@ -82,7 +83,7 @@ namespace Flinty.GameMath
                 return Zero();
             }
 
-            return new Point(X / v, Y / v2);
+            return new Coordinates(X / v, Y / v2);
         }
 
 
@@ -117,7 +118,7 @@ namespace Flinty.GameMath
             Y = b;
         }
 
-        public void Set(Point other)
+        public void Set(Coordinates other)
         {
             Set(other.X, other.Y);
         }
@@ -134,29 +135,7 @@ namespace Flinty.GameMath
     }
 
 
-    public class PointF(float x, float y) : Point((int)x, (int)y)
-    {
-        public new float X { get; set; }
-        public new float Y { get; set; }
-
-        public static new PointF Zero() => new(0, 0);
-        public static new PointF One() => new(1, 1);
-
-        public static bool NearlyEqual(float a, float b, float tolerance = 0.0001f) => Math.Abs(a - b) < tolerance;
-        public bool NearlyEqual(PointF other, float tolerance = 0.0001f) => NearlyEqual(X, other.X, tolerance) && NearlyEqual(Y, other.Y, tolerance);
-        public bool NearlyEqual(Point other, float tolerance = 0.0001f) => NearlyEqual(X, other.X, tolerance) && NearlyEqual(Y, other.Y, tolerance);
-
-        public static float Lerp(float a, float b, float t) => a + (b - a) * t;
-
-        public void LerpInplace(float x, float y, float t)
-        {
-            X = Lerp(X, x, t);
-            Y = Lerp(Y, y, t);
-        }
-    }
-
-
-    public class Area(int x, int y) : Point(x, y)
+    public class Area(int x, int y) : Coordinates(x, y)
     {
         public static Area TileSize()
         {
@@ -170,9 +149,9 @@ namespace Flinty.GameMath
 
         
 
-        public Point AsPoint()
+        public Coordinates AsCoordinate()
         {
-            return new Point(X, Y);
+            return new Coordinates(X, Y);
         }
     }
 }

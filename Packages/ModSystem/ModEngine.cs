@@ -13,7 +13,7 @@ public class ModEngine(Engine engine)
     public Engine Engine { get; } = engine;
     public Terrain Terrain { get; } = engine.Terrain;
     public Clock Clock { get; } = engine.Clock;
-    public PlayerEntity Player { get; } = engine.Terrain.Player;
+    public PlayerNode Player { get; } = engine.Terrain.Player;
 
     public Lua Lua { get; } = new();
 

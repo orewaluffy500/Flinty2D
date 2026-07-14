@@ -18,7 +18,7 @@ public class ChunkManager(Terrain t)
 
         if (!Chunks.TryGetValue(key, out Chunk? value))
         {
-            value = new Chunk(new Point(x, y));
+            value = new Chunk(new Coordinates(x, y));
             Chunks[key] = value;
         }
 
@@ -27,10 +27,12 @@ public class ChunkManager(Terrain t)
 
     public void RenderAndUpdateChunks()
     {
-        UpdateVisibleChunks(Terrain.Player.Pos.X, Terrain.Player.Pos.Y);
+        UpdateVisibleChunks(Terrain.Player.Coords.X, Terrain.Player.Coords.Y);
 
         bool ticking = Terrain.Engine.Clock.IsTicking;
         int index = Terrain.Engine.Clock.TickIndex;
+
+        int randomTickStep = Preferences.RANDOM_TICK_STEP;
 
         foreach (Chunk chunk in VisibleChunks)
         {
@@ -40,18 +42,18 @@ public class ChunkManager(Terrain t)
                 ChunkHelpers.DrawDecors(chunk);
             }
 
-            if (ticking && !Terrain.TicksFrozen)
+            if (ticking && !Terrain.TicksFrozen && index % randomTickStep == 0)
             {
                 chunk.DoRandomTick(Terrain);
             }
 
-            foreach (Block? block in chunk.Blocks)
+            foreach (TileNode? block in chunk.Blocks)
             {
                 if (block == null) continue;    // Sparse array — skip empty cells
 
                 if (Terrain.CanBlocksTick())
                 {
-                    Terrain.Engine.FireBlockEvent("tick", block.Type, Terrain.Engine.Clock.TickIndex, block.Pos.X, block.Pos.Y);
+                    Terrain.Engine.FireBlockEvent("tick", block.BlockId, Terrain.Engine.Clock.TickIndex, block.Coords.X, block.Coords.Y);
                 }
 
                 block.Draw();
@@ -64,7 +66,7 @@ public class ChunkManager(Terrain t)
         VisibleChunks.Clear();
 
         // Convert the world-space block origin to chunk-space coordinates
-        Point originChunkPos = ChunkHelpers.Block2Chunk(originX, originY);
+        Coordinates originChunkPos = ChunkHelpers.Node2ChunkCoord(originX, originY);
 
         int drawDistance = Preferences.DRAW_DISTANCE;
 

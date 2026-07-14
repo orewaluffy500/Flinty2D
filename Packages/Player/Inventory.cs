@@ -2,11 +2,11 @@ using Flinty.Assets;
 
 namespace Flinty.Player
 {
-    public class Inventory(PlayerEntity player)
+    public class Inventory(PlayerNode player)
     {
         public int SelectedIndex { get; protected set; } = 0;
 
-        public PlayerEntity Player { get; protected set; } = player;
+        public PlayerNode Player { get; protected set; } = player;
 
         public void AdvanceSelection()
         {

@@ -16,7 +16,6 @@ namespace Flinty.Globals
         public static readonly int TOTAL_TICKS_CAP = 128_000;
 
         public static readonly int RANDOM_TICKS = 3;
-
-        public static readonly float DEFAULT_TWEEN_SPEED = 0.1f; // Default tween speed for TweenedEntities
+        public static readonly int RANDOM_TICK_STEP = 2; // 1 random tick per n ticks
     }
 }

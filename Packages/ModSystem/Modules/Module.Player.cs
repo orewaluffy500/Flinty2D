@@ -19,12 +19,12 @@ public class PlayerModule : INativeModule
     public class InnerModule(Terrain terrain)
     {
         // POSITION
-        public int get_x() => terrain.Player.Pos.X;
-        public int get_y() => terrain.Player.Pos.Y;
+        public int get_x() => terrain.Player.Coords.X;
+        public int get_y() => terrain.Player.Coords.Y;
 
         
-        public void set_x(int x) => terrain.Player.Pos.X = x;
-        public void set_y(int y) => terrain.Player.Pos.Y = y;
+        public void set_x(int x) => terrain.Player.Coords.X = x;
+        public void set_y(int y) => terrain.Player.Coords.Y = y;
 
         // VELOCITY
         public void move_by(int mx, int my)
@@ -35,7 +35,7 @@ public class PlayerModule : INativeModule
         // TELEPORT
         public void move_to(int dx, int dy)
         {
-            terrain.Player.Pos.Set(dx, dy);
+            terrain.Player.Coords.Set(dx, dy);
         }
 
         // SELECTED BLOCK

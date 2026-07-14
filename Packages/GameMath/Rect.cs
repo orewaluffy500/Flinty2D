@@ -2,9 +2,9 @@ using System.Drawing;
 
 namespace Flinty.GameMath
 {
-    public class RectShape(Point pos, Area size)
+    public class RectShape(Coordinates pos, Area size)
     {
-        public Point Pos { get; set; } = pos;
+        public Coordinates Pos { get; set; } = pos;
         public Area Size { get; set; } = size;
 
         public static RectShape from(int x, int y, int w, int h)

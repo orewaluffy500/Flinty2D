@@ -8,9 +8,9 @@ using Raylib_cs;
 
 namespace Flinty.Player
 {
-    public class PlayerEntity : TweenedEntity
+    public class PlayerNode : BaseNode
     {
-        public Point Velocity { get; private set; } = Point.Zero();
+        public Coordinates Velocity { get; private set; } = Coordinates.Zero();
 
         public Terrain Terrain { get; }
 
@@ -24,19 +24,17 @@ namespace Flinty.Player
 
         public float StepDelay { get; private set; } = 0;
 
-        public PlayerEntity(Terrain terrain)
+        public PlayerNode(Terrain terrain)
         {
             Terrain = terrain;
             Cursor = new(this, Terrain);
-            Camera = new(new(0, 0), Pos.ToVector(), 0, 1);
+            Camera = new(new(0, 0), Coords.ToVector(), 0, 1);
             Inventory = new(this);
             Metadata = new();
         }
 
         public override void Update(float deltaTime)
         {
-            base.Update(deltaTime);
-
             UpdateMovement(deltaTime);
             HandleBlockCycle();
             HandleMisc();
@@ -75,17 +73,16 @@ namespace Flinty.Player
             if (!Velocity.IsZero())
             {
                 StepDelay = Preferences.STEP_DELAY;
-                Terrain.Engine.FirePlayerEvent("moved", Pos.X, Pos.Y, Pos.X + Velocity.X, Pos.Y + Velocity.Y);
+                Terrain.Engine.FirePlayerEvent("moved", Coords.X, Coords.Y, Coords.X + Velocity.X, Coords.Y + Velocity.Y);
             }
 
 
             // Handle collision
 
-            if (Terrain.IsSolidBlock(Pos.X + Velocity.X, Pos.Y)) Velocity.X = 0;
-            if (Terrain.IsSolidBlock(Pos.X, Pos.Y + Velocity.Y)) Velocity.Y = 0;
+            if (Terrain.IsSolidBlock(Coords.X + Velocity.X, Coords.Y)) Velocity.X = 0;
+            if (Terrain.IsSolidBlock(Coords.X, Coords.Y + Velocity.Y)) Velocity.Y = 0;
 
-            Pos.Change(Velocity.X, Velocity.Y, true); // Inline means no new instances
-
+            Coords.Change(Velocity.X, Velocity.Y, true); // Inline means no new instances
             Velocity.SetZero();
         }
 
@@ -121,14 +118,14 @@ namespace Flinty.Player
 
             EngineRenderer.TextScale(0, 5, selecName.ToUpper(), color); // Draw selection in upper case
             EngineRenderer.TextScale(0, 8, "[TAB] to cycle.", Color.RayWhite, 20); // Draw how to cycle blocks
-            EngineRenderer.TextScale(0, 13, $"Player {Pos.X}, {Pos.Y}", Color.RayWhite, 20); // Player co-ords
-            EngineRenderer.TextScale(0, 16, $"Cursor {Cursor.Pos.X}, {Cursor.Pos.Y}", Color.RayWhite, 20); // Cursor co-ords
+            EngineRenderer.TextScale(0, 13, $"Player {Coords.X}, {Coords.Y}", Color.RayWhite, 20); // Player co-ords
+            EngineRenderer.TextScale(0, 16, $"Cursor {Cursor.Coords.X}, {Cursor.Coords.Y}", Color.RayWhite, 20); // Cursor co-ords
         }
 
         public override void Draw()
         {
             Cursor.Draw(); // Draw cursor
-            EngineRenderer.Rectangle(new(VisualPos.Mul(Preferences.TILE_SIZE), Area.TileSize()), new(123, 123, 255)); // Draw player
+            EngineRenderer.Rectangle(new(Coords.Mul(Preferences.TILE_SIZE), Area.TileSize()), new(123, 123, 255)); // Draw player
         }
 
 
@@ -136,7 +133,7 @@ namespace Flinty.Player
         public void UpdateCamera()
         {
             Camera.Offset = new(Raylib.GetScreenWidth() / 2, Raylib.GetScreenHeight() / 2); // Get camera offset
-            Camera.Target = Vector2.Lerp(Camera.Target, Pos.Mul(Preferences.TILE_SIZE).ToVector(), 0.2f); // Lerp camera to player
+            Camera.Target = Vector2.Lerp(Camera.Target, Coords.Mul(Preferences.TILE_SIZE).ToVector(), 0.2f); // Lerp camera to player
         }
     }
 }

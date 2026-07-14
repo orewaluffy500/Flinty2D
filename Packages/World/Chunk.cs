@@ -5,16 +5,16 @@ using Flinty.Globals;
 
 namespace Flinty.World
 {
-    public class Chunk(Point pos)
+    public class Chunk(Coordinates pos)
     {
-        public Block?[] Blocks { set; get; } = new Block[Preferences.CHUNK_SIZE * Preferences.CHUNK_SIZE];
-        public Point Pos { get; } = pos;
+        public TileNode?[] Blocks { set; get; } = new TileNode[Preferences.CHUNK_SIZE * Preferences.CHUNK_SIZE];
+        public Coordinates Pos { get; } = pos;
 
         public static int BlockIndex(int x, int y)
         {
             return x + (y * Preferences.CHUNK_SIZE);
         }
-        public void SetBlock(int x, int y, Block? block)
+        public void SetBlock(int x, int y, TileNode? block)
         {
             // Bounds check only, no occupancy check
             if (x < 0 || x >= Preferences.CHUNK_SIZE) return;
@@ -30,7 +30,7 @@ namespace Flinty.World
             Blocks[BlockIndex(x, y)] = null;
         }
 
-        public Block? GetBlock(int x, int y)
+        public TileNode? GetBlock(int x, int y)
         {
             if (IsNull(x, y)) return null;
 
@@ -59,10 +59,10 @@ namespace Flinty.World
                         .Take(Preferences.RANDOM_TICKS)
                         .ToArray();
             
-            foreach (Block? block in blocks){
+            foreach (TileNode? block in blocks){
                 if (block != null)
                 {
-                    terrain.Engine.FireBlockEvent("random_tick", block.Type, terrain.Engine.Clock.TickIndex, block.Pos.X, block.Pos.Y);
+                    terrain.Engine.FireBlockEvent("random_tick", block.BlockId, terrain.Engine.Clock.TickIndex, block.Coords.X, block.Coords.Y);
                 }
             }
         }
@@ -81,7 +81,7 @@ namespace Flinty.World
     {
         // Converts a block's world position to the chunk that contains it.
         // Floor division ensures negative coordinates map to the correct chunk (e.g. block -1 → chunk -1, not 0)
-        public static Point Block2Chunk(int x, int y)
+        public static Coordinates Node2ChunkCoord(int x, int y)
         {
             return new(
                 (int)Math.Floor((double)x / Preferences.CHUNK_SIZE),
@@ -91,7 +91,7 @@ namespace Flinty.World
 
         // Converts a block's world position to its local offset within its chunk (0 to CHUNK_SIZE-1).
         // Floor on modulo handles negative coordinates consistently with Block2Chunk
-        public static Point Block2Local(int x, int y)
+        public static Coordinates Node2LocalCoord(int x, int y)
         {
             int size = Preferences.CHUNK_SIZE;
 
@@ -106,7 +106,7 @@ namespace Flinty.World
         // The low alpha value (5) makes it a subtle debug overlay rather than a solid outline
         public static void DrawDecors(Chunk chunk)
         {
-            Point worldPos = chunk.Pos.Mul(Preferences.CHUNK_SIZE * Preferences.TILE_SIZE);
+            Coordinates worldPos = chunk.Pos.Mul(Preferences.CHUNK_SIZE * Preferences.TILE_SIZE);
             Area size = Area.ChunkSize().Mul(Preferences.TILE_SIZE).AsArea();
 
             EngineRenderer.RectangleLines(new(worldPos, size), new(70, 70, 70, 50));

@@ -16,7 +16,7 @@ public class Randomizer
         return offset != 0 ? offset : (Random.Next(0, 1) == 0 ? -1 : 1);
     }
 
-    public static Point GetRandomBlockPos(int sx, int sy, int ex, int ey)
+    public static Coordinates GetRandomBlockPos(int sx, int sy, int ex, int ey)
     {
         return new(
             Random.Next(sx, ex),

@@ -8,10 +8,10 @@ using Area = Flinty.GameMath.Area;
 
 namespace Flinty.World
 {
-    public class Block : Entity
+    public class TileNode : BaseNode
     {
-        public string Type { get; set; }
-        public BlockEntry? BlockEntry;
+        public string BlockId { get; set; }
+        public BlockEntry? BlockRegistryEntry;
         public Terrain Terrain { get; }
 
         public bool CanCollide { get; set; } = true;
@@ -23,17 +23,13 @@ namespace Flinty.World
         }
         public static readonly Area TileSize = Area.TileSize();
 
-        public Block(int x, int y, string type, Terrain terrain)
+        public TileNode(int x, int y, string type, Terrain terrain)
         {
             Terrain = terrain;
-            Pos = new Point(x, y);
-            Type = type;
-            BlockEntry = BlockRegistry.GetBlockEntry(Type);
-
-            if (BlockEntry is BlockEntry b)
-            {
-                CanCollide = b.CanCollide;
-            }
+            Coords = new Coordinates(x, y);
+            BlockId = type;
+            BlockRegistryEntry = BlockRegistry.GetBlockEntry(BlockId);
+            CanCollide = BlockRegistryEntry?.CanCollide ?? true;
         }
 
 
@@ -41,27 +37,17 @@ namespace Flinty.World
         {
 
             // Validate color
-            Color finalColor = Color.Black;
-
-            if (BlockEntry != null)
-            {
-                finalColor = BlockEntry.FallbackColor;
-            }
+            Color finalColor = BlockRegistryEntry?.FallbackColor ?? Color.Black;
 
             // Get texture
-            Texture2D? tex = null;
-
-            if (BlockEntry != null)
-            {
-                tex = TextureRegistry.GetTexture(BlockEntry.TextureId);
-            }
+            Texture2D? tex = TextureRegistry.GetTexture(BlockId);
 
 
             // Draw
             if (tex == null)
             {
                 EngineRenderer.Rectangle(
-                    new(Pos.Mul(Preferences.TILE_SIZE), TileSize),
+                    new(Coords.Mul(Preferences.TILE_SIZE), TileSize),
                     finalColor
                 );
 
@@ -70,13 +56,14 @@ namespace Flinty.World
 
 
             EngineRenderer.Texture(
-                (Texture2D)tex, new(Point.Zero(), Area.TileSize()), new(Pos.Mul(Preferences.TILE_SIZE), Area.TileSize()), 0
+                (Texture2D)tex, new(Coordinates.Zero(), Area.TileSize()), new(Coords.Mul(Preferences.TILE_SIZE), Area.TileSize()), 0
             );
             
         }
 
-        public override void Tick(int index, Terrain terrain)
+        public override void Tick(int index, Terrain terrain, Engine engine)
         {
+            engine.FireBlockEvent("tick", BlockId, index, Coords.X, Coords.Y);
         }
     }
 }
