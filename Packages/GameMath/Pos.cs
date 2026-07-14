@@ -1,22 +1,21 @@
 using System.Numerics;
 using Flinty.Globals;
-using Raylib_cs;
 
 namespace Flinty.GameMath
 {
-    public class Pos(int x, int y)
+    public class Point(int x, int y)
     {
         public int X { get; set; } = x;
         public int Y { get; set; } = y;
 
-        public static Pos Zero()
+        public static Point Zero()
         {
-            return new Pos(0, 0);
+            return new Point(0, 0);
         }
 
-        public static Pos One()
+        public static Point One()
         {
-            return new Pos(1, 1);
+            return new Point(1, 1);
         }
 
         public Vector2 ToVector()
@@ -24,33 +23,33 @@ namespace Flinty.GameMath
             return new Vector2(X, Y);
         }
 
-        public static Pos From(int v)
+        public static Point From(int v)
         {
-            return new Pos(v, v);
+            return new Point(v, v);
         }
 
-        public static Pos FromGrid(int x, int y)
+        public static Point FromGrid(int x, int y)
         {
-            return new Pos(x, y).Mul(Preferences.TILE_SIZE);
+            return new Point(x, y).Mul(Preferences.TILE_SIZE);
         }
 
-        public Pos Change(int v, bool inline = false)
+        public Point Change(int v, bool inline = false)
         {
             return Change(v, v, inline);
         }
 
-        public Pos Mul(int v, bool inline = false)
+        public Point Mul(int v, bool inline = false)
         {
             return Mul(v, v, inline);
         }
 
-        public Pos Div(int v, bool inline = false)
+        public Point Div(int v, bool inline = false)
         {
             return Div(v, v, inline);
         }
 
 
-        public Pos Change(int v, int v2, bool inline = false)
+        public Point Change(int v, int v2, bool inline = false)
         {
             if (inline)
             {
@@ -59,10 +58,10 @@ namespace Flinty.GameMath
                 return Zero();
             }
 
-            return new Pos(X + v, Y + v2);
+            return new Point(X + v, Y + v2);
         }
 
-        public Pos Mul(int v, int v2, bool inline = false)
+        public Point Mul(int v, int v2, bool inline = false)
         {
             if (inline)
             {
@@ -71,10 +70,10 @@ namespace Flinty.GameMath
                 return Zero();
             }
 
-            return new Pos(X * v, Y * v2);
+            return new Point(X * v, Y * v2);
         }
 
-        public Pos Div(int v, int v2, bool inline = false)
+        public Point Div(int v, int v2, bool inline = false)
         {
             if (inline)
             {
@@ -83,7 +82,7 @@ namespace Flinty.GameMath
                 return Zero();
             }
 
-            return new Pos(X / v, Y / v2);
+            return new Point(X / v, Y / v2);
         }
 
 
@@ -118,7 +117,7 @@ namespace Flinty.GameMath
             Y = b;
         }
 
-        public void Set(Pos other)
+        public void Set(Point other)
         {
             Set(other.X, other.Y);
         }
@@ -128,30 +127,37 @@ namespace Flinty.GameMath
             Set((int) other.X, (int) other.Y);
         }
 
-        public Size ToSize()
+        public Area AsArea()
         {
-            return new Size(X, Y);
+            return new Area(X, Y);
         }
     }
 
 
-    public class Size(int x, int y) : Pos(x, y)
+    public class PointF(float x, float y) : Point((int)x, (int)y)
     {
-        public static Size TileSize()
+        public new float X { get; set; }
+        public new float Y { get; set; }
+    }
+
+
+    public class Area(int x, int y) : Point(x, y)
+    {
+        public static Area TileSize()
         {
-            return new Size(Preferences.TILE_SIZE, Preferences.TILE_SIZE);
+            return new Area(Preferences.TILE_SIZE, Preferences.TILE_SIZE);
         }
 
-        public static Size ChunkSize()
+        public static Area ChunkSize()
         {
-            return new Size(Preferences.CHUNK_SIZE, Preferences.CHUNK_SIZE);
+            return new Area(Preferences.CHUNK_SIZE, Preferences.CHUNK_SIZE);
         }
 
         
 
-        public Pos ToPos()
+        public Point AsPoint()
         {
-            return new Pos(X, Y);
+            return new Point(X, Y);
         }
     }
 }

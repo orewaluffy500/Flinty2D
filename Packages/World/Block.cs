@@ -4,7 +4,7 @@ using Flinty.GameMath;
 using Flinty.GameSystem;
 using Flinty.Globals;
 using Raylib_cs;
-using Size = Flinty.GameMath.Size;
+using Area = Flinty.GameMath.Area;
 
 namespace Flinty.World
 {
@@ -21,12 +21,12 @@ namespace Flinty.World
             get => _metadata ??= new Metadata();
             set => _metadata = value;
         }
-        public static readonly Size TileSize = Size.TileSize();
+        public static readonly Area TileSize = Area.TileSize();
 
         public Block(int x, int y, string type, Terrain terrain)
         {
             Terrain = terrain;
-            Pos = new Pos(x, y);
+            Pos = new Point(x, y);
             Type = type;
             BlockEntry = BlockRegistry.GetBlockEntry(Type);
 
@@ -70,7 +70,7 @@ namespace Flinty.World
 
 
             EngineRenderer.Texture(
-                (Texture2D)tex, new(Pos.Zero(), Size.TileSize()), new(Pos.Mul(Preferences.TILE_SIZE), Size.TileSize()), 0
+                (Texture2D)tex, new(Point.Zero(), Area.TileSize()), new(Pos.Mul(Preferences.TILE_SIZE), Area.TileSize()), 0
             );
             
         }

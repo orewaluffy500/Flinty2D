@@ -59,8 +59,8 @@ namespace Flinty.World
         public bool Move(int x, int y, int dx, int dy, bool force = false)
         {
             // Get the two blocks
-            GetBlockEx(x, y, out Pos localBlockPos1, out Chunk chunk1, out Block? block1);
-            GetBlockEx(dx, dy, out Pos localBlockPos2, out Chunk chunk2, out Block? block2);
+            GetBlockEx(x, y, out Point localBlockPos1, out Chunk chunk1, out Block? block1);
+            GetBlockEx(dx, dy, out Point localBlockPos2, out Chunk chunk2, out Block? block2);
 
             if (block1 == null) return false; // Abort if target is null
             if (block2 != null && !force) return false; // Abort if destination exists and force isn't applied
@@ -78,7 +78,7 @@ namespace Flinty.World
         {
             if (!BlockRegistry.IsRegistered(typeName)) return false;
 
-            GetBlockEx(x, y, out Pos localBlockPos, out Chunk chunk, out Block? block);
+            GetBlockEx(x, y, out Point localBlockPos, out Chunk chunk, out Block? block);
 
             // Exit if the block already exists and we can't replace it.
             if (block != null && !replace) return false;
@@ -102,7 +102,7 @@ namespace Flinty.World
                 {
                     if (i == 0 && j == 0) continue;
 
-                    GetBlockEx(x + j, y + i, out Pos _pos, out Chunk _c, out Block? tmp);
+                    GetBlockEx(x + j, y + i, out Point _pos, out Chunk _c, out Block? tmp);
                     if (tmp != null)
                     {
                         Engine.FireBlockEvent("updated", tmp.Type, x, y, x + j, y + i);
@@ -113,7 +113,7 @@ namespace Flinty.World
 
         public bool Break(int x, int y)
         {
-            GetBlockEx(x, y, out Pos localBlockPos, out Chunk chunk, out Block? block);
+            GetBlockEx(x, y, out Point localBlockPos, out Chunk chunk, out Block? block);
 
             if (block == null) return false;
 
@@ -147,10 +147,10 @@ namespace Flinty.World
             }
         }
 
-        private void GetBlockEx(int x, int y, out Pos localBlockPos, out Chunk chunk, out Block? block)
+        private void GetBlockEx(int x, int y, out Point localBlockPos, out Chunk chunk, out Block? block)
         {
             // Retrieve chunk position
-            Pos chunkPos = ChunkHelpers.Block2Chunk(x, y);
+            Point chunkPos = ChunkHelpers.Block2Chunk(x, y);
 
             // Retrieve block position local to chunk
             localBlockPos = ChunkHelpers.Block2Local(x, y);
@@ -164,7 +164,7 @@ namespace Flinty.World
 
         public void SetBlock(int x, int y, string name)
         {
-            GetBlockEx(x, y, out Pos localBlockPos, out Chunk chunk, out Block? alreadyThere);
+            GetBlockEx(x, y, out Point localBlockPos, out Chunk chunk, out Block? alreadyThere);
 
             if (alreadyThere != null) {
                 alreadyThere.Type = name;
@@ -179,10 +179,10 @@ namespace Flinty.World
         public Block? GetBlock(int x, int y)
         {
             // Retrieve chunk position
-            Pos chunkPos = ChunkHelpers.Block2Chunk(x, y);
+            Point chunkPos = ChunkHelpers.Block2Chunk(x, y);
 
             // Retrieve block position local to chunk
-            Pos localBlockPos = ChunkHelpers.Block2Local(x, y);
+            Point localBlockPos = ChunkHelpers.Block2Local(x, y);
 
             // Get chunk (Lazy-loaded)
             Chunk chunk = ChunkManager.GetChunkSafe(chunkPos.X, chunkPos.Y);

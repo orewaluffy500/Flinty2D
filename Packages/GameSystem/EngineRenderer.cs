@@ -32,7 +32,7 @@ namespace Flinty.GameSystem
         public static void Texture(Texture2D texture, RectShape source, RectShape dest, int rotation)
         {
             Raylib.DrawTexturePro(
-                texture, source.toRaylib(), dest.toRaylib(), Pos.Zero().ToVector(), rotation, Color.White
+                texture, source.toRaylib(), dest.toRaylib(), Point.Zero().ToVector(), rotation, Color.White
             );
         }
 
@@ -50,7 +50,7 @@ namespace Flinty.GameSystem
             Raylib.DrawTextEx(SystemFont, text, new(x, y), fontSize, 2, color);
         }
 
-        public static void TextOrigined(float x, float y, Pos origin, string text, Color color, int fontSize = 24)
+        public static void TextOrigined(float x, float y, Point origin, string text, Color color, int fontSize = 24)
         {
             if (origin.IsZero())
             {
@@ -68,7 +68,7 @@ namespace Flinty.GameSystem
         }
 
 
-        public static void Line(Pos start, Pos end, Raylib_cs.Color color)
+        public static void Line(Point start, Point end, Raylib_cs.Color color)
         {
             Raylib.DrawLineV(start.ToVector(), end.ToVector(), color);
         }

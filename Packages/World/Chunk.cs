@@ -5,10 +5,10 @@ using Flinty.Globals;
 
 namespace Flinty.World
 {
-    public class Chunk(Pos pos)
+    public class Chunk(Point pos)
     {
         public Block?[] Blocks { set; get; } = new Block[Preferences.CHUNK_SIZE * Preferences.CHUNK_SIZE];
-        public Pos Pos { get; } = pos;
+        public Point Pos { get; } = pos;
 
         public static int BlockIndex(int x, int y)
         {
@@ -81,7 +81,7 @@ namespace Flinty.World
     {
         // Converts a block's world position to the chunk that contains it.
         // Floor division ensures negative coordinates map to the correct chunk (e.g. block -1 → chunk -1, not 0)
-        public static Pos Block2Chunk(int x, int y)
+        public static Point Block2Chunk(int x, int y)
         {
             return new(
                 (int)Math.Floor((double)x / Preferences.CHUNK_SIZE),
@@ -91,7 +91,7 @@ namespace Flinty.World
 
         // Converts a block's world position to its local offset within its chunk (0 to CHUNK_SIZE-1).
         // Floor on modulo handles negative coordinates consistently with Block2Chunk
-        public static Pos Block2Local(int x, int y)
+        public static Point Block2Local(int x, int y)
         {
             int size = Preferences.CHUNK_SIZE;
 
@@ -106,8 +106,8 @@ namespace Flinty.World
         // The low alpha value (5) makes it a subtle debug overlay rather than a solid outline
         public static void DrawDecors(Chunk chunk)
         {
-            Pos worldPos = chunk.Pos.Mul(Preferences.CHUNK_SIZE * Preferences.TILE_SIZE);
-            Size size = Size.ChunkSize().Mul(Preferences.TILE_SIZE).ToSize();
+            Point worldPos = chunk.Pos.Mul(Preferences.CHUNK_SIZE * Preferences.TILE_SIZE);
+            Area size = Area.ChunkSize().Mul(Preferences.TILE_SIZE).AsArea();
 
             EngineRenderer.RectangleLines(new(worldPos, size), new(70, 70, 70, 50));
             EngineRenderer.Text(worldPos.X, worldPos.Y, $"{chunk.Pos.X}, {chunk.Pos.Y}", new(80, 80, 80), 14);

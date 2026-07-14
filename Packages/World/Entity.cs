@@ -7,7 +7,7 @@ namespace Flinty.World
 {
     public class Entity
     {
-        public Pos Pos { get; protected set; } = Pos.Zero();
+        public Point Pos { get; protected set; } = Point.Zero();
 
 
         public virtual void Update(float deltaTime)

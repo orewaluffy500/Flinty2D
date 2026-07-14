@@ -169,8 +169,8 @@ namespace Flinty.GameSystem
         
         public List<object> FireBlockEvent(string event_name, string block_type, params object[] args)
         {
-            var results_for_all = ModEngine.FireCallback($"{EventCategories.BLOCK_EVENTS}.{EventCategories.ALL_BLOCKS}.{block_type}", args);
-            var results_for_exclusive = ModEngine.FireCallback($"{EventCategories.BLOCK_EVENTS}.{event_name}.{block_type}", args);
+            var results_for_all = ModEngine.FireCallback($"{EventCategories.BLOCK_EVENTS}.{EventCategories.ALL_BLOCKS}.{event_name}", args);
+            var results_for_exclusive = ModEngine.FireCallback($"{EventCategories.BLOCK_EVENTS}.{block_type}.{event_name}", args);
 
             return [.. results_for_all.Concat(results_for_exclusive)]; // Combine both results
         }

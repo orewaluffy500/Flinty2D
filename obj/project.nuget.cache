@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "bYr4ZLiXb8c=",
+  "dgSpecHash": "PsaMsnD/VRw=",
   "success": true,
   "projectFilePath": "D:\\Flinty\\Flinty\\Flinty.csproj",
   "expectedPackageFiles": [
@@ -8,9 +8,9 @@
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.net.illink.tasks\\10.0.9\\microsoft.net.illink.tasks.10.0.9.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\nlua\\1.7.9\\nlua.1.7.9.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\raylib-cs\\8.0.0\\raylib-cs.8.0.0.nupkg.sha512",
-    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.netcore.app.runtime.linux-x64\\10.0.9\\microsoft.netcore.app.runtime.linux-x64.10.0.9.nupkg.sha512",
-    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.aspnetcore.app.runtime.linux-x64\\10.0.9\\microsoft.aspnetcore.app.runtime.linux-x64.10.0.9.nupkg.sha512",
-    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.netcore.app.host.linux-x64\\10.0.9\\microsoft.netcore.app.host.linux-x64.10.0.9.nupkg.sha512"
+    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.netcore.app.runtime.win-x64\\10.0.9\\microsoft.netcore.app.runtime.win-x64.10.0.9.nupkg.sha512",
+    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.windowsdesktop.app.runtime.win-x64\\10.0.9\\microsoft.windowsdesktop.app.runtime.win-x64.10.0.9.nupkg.sha512",
+    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.aspnetcore.app.runtime.win-x64\\10.0.9\\microsoft.aspnetcore.app.runtime.win-x64.10.0.9.nupkg.sha512"
   ],
   "logs": []
 }

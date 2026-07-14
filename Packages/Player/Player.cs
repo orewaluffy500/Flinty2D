@@ -10,7 +10,7 @@ namespace Flinty.Player
 {
     public class PlayerEntity : Entity
     {
-        public Pos Velocity { get; private set; } = Pos.Zero();
+        public Point Velocity { get; private set; } = Point.Zero();
 
         public Terrain Terrain { get; }
 
@@ -125,7 +125,7 @@ namespace Flinty.Player
         public override void Draw()
         {
             Cursor.Draw(); // Draw cursor
-            EngineRenderer.Rectangle(new(Pos.Mul(Preferences.TILE_SIZE), Size.TileSize()), new(123, 123, 255)); // Draw player
+            EngineRenderer.Rectangle(new(Pos.Mul(Preferences.TILE_SIZE), Area.TileSize()), new(123, 123, 255)); // Draw player
         }
 
 

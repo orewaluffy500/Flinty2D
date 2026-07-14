@@ -18,7 +18,7 @@ public class ChunkManager(Terrain t)
 
         if (!Chunks.TryGetValue(key, out Chunk? value))
         {
-            value = new Chunk(new Pos(x, y));
+            value = new Chunk(new Point(x, y));
             Chunks[key] = value;
         }
 
@@ -64,7 +64,7 @@ public class ChunkManager(Terrain t)
         VisibleChunks.Clear();
 
         // Convert the world-space block origin to chunk-space coordinates
-        Pos originChunkPos = ChunkHelpers.Block2Chunk(originX, originY);
+        Point originChunkPos = ChunkHelpers.Block2Chunk(originX, originY);
 
         int drawDistance = Preferences.DRAW_DISTANCE;
 
